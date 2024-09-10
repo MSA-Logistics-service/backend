@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: logistics
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/logistics
+    username: logistics_db
+    password: logistics_db
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.springframework: DEBUG
+
+server:
+  port: 19091
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
