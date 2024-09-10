@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  logistics-db:
+    container_name: logistics_db
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: logistics_db
+      POSTGRES_PASSWORD: logistics_db
+      POSTGRES_DB: logistics
+    volumes:
+      - logistics_db:/var/lib/postgresql/data
+      - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tiniping_network
+
+volumes:
+  logistics_db:
+
+networks:
+  tiniping_network:
+    driver: bridge
