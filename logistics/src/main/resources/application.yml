@@ -1,6 +1,10 @@
 spring:
   application:
     name: logistics
+  cloud:
+    circuitbreaker:
+      resilience4j:
+        enabled: true
 
   datasource:
     url: jdbc:postgresql://localhost:5433/logistics
@@ -16,11 +20,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
-#logging:
-#  level:
-#    org.hibernate.SQL: DEBUG
-#    org.springframework: DEBUG
-
 server:
   port: 19091
 
@@ -28,3 +27,27 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        slowCallRateThreshold: 100
+        slowCallDurationThreshold: 60000
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 20s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
