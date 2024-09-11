@@ -45,6 +45,8 @@ dependencies {
 	// resilience4j, prometheus
 	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	// 서킷 브레이커 상태 모니터링
+	implementation 'io.github.resilience4j:resilience4j-micrometer'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
