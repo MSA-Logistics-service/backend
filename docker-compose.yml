@@ -17,6 +17,16 @@ services:
     networks:
       - tiniping_network
 
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    restart: always
+    ports:
+      - "9411:9411"
+    networks:
+      - tiniping_network
+
 volumes:
   logistics_db:
 
