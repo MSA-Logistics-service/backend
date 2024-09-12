@@ -3,6 +3,7 @@ package msa.logistics.service.logistics.common.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -46,5 +47,13 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(name = "is_delete")
     protected Boolean isDelete;
+
+    // is_delete 기본값 false로 설정
+    @PrePersist
+    protected void onCreate() {
+        if (this.isDelete == null) {
+            this.isDelete = false;
+        }
+    }
 
 }
