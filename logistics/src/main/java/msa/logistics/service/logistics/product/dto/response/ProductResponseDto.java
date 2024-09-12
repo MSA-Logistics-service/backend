@@ -15,6 +15,7 @@ public class ProductResponseDto {
     private Long stockQuantity;
     private UUID vendorId;
     private UUID hubId;
+    private String description;
 
     @Builder
     public ProductResponseDto(Product product) {
@@ -23,5 +24,6 @@ public class ProductResponseDto {
         this.stockQuantity = product.getStockQuantity();
         this.vendorId = product.getVendorId();
         this.hubId = product.getHubId();
+        this.description = product.getDescription();
     }
 }

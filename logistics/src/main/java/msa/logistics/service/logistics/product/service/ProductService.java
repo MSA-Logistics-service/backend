@@ -30,6 +30,7 @@ public class ProductService {
                 .stockQuantity(request.getStockQuantity())
                 .vendorId(request.getVendorId())
                 .hubId(request.getHubId())
+                .description(request.getDescription())
                 .build();
 
         productRepository.save(product);
@@ -57,7 +58,7 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        product.updateProduct(request.getProductName(), request.getStockQuantity());
+        product.updateProduct(request.getProductName(), request.getStockQuantity(), request.getDescription());
     }
 
     // 상품 삭제 (논리적 삭제)

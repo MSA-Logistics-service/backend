@@ -24,11 +24,14 @@ public class ProductCreateRequestDto {
     @NotNull
     private UUID hubId;
 
+    private String description;
+
     @Builder
-    public ProductCreateRequestDto(String productName, Long stockQuantity, UUID vendorId, UUID hubId) {
+    public ProductCreateRequestDto(String productName, Long stockQuantity, UUID vendorId, UUID hubId, String description) {
         this.productName = productName;
         this.stockQuantity = stockQuantity;
         this.vendorId = vendorId;
         this.hubId = hubId;
+        this.description = description;
     }
 }

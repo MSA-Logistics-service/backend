@@ -21,4 +21,6 @@ public class ProductUpdateRequestDto {
 
     @NotNull
     private UUID hubId;
+
+    private String description;
 }
