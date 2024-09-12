@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.common.dto.ApiResponseDto;
 import msa.logistics.service.logistics.product.dto.request.ProductCreateRequestDto;
+import msa.logistics.service.logistics.product.dto.request.ProductUpdateRequestDto;
 import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 import msa.logistics.service.logistics.product.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,7 @@ public class ProductController {
         List<ProductResponseDto> products = productService.getProductsByVendor(vendorId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "업체의 전체 상품 목록", products));
     }
+
     /**
      * 상품 수정
      */
@@ -57,6 +59,15 @@ public class ProductController {
                                                               @Valid @RequestBody ProductUpdateRequestDto request) {
         productService.updateProduct(productId, request);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 수정 성공", null));
+    }
+
+    /**
+     * 상품 삭제 (논리적 삭제)
+     */
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteProduct(@PathVariable UUID productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 삭제 성공", null));
     }
 
 }

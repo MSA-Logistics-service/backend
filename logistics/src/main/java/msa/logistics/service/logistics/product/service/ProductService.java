@@ -5,6 +5,7 @@ import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.product.domain.Product;
 import msa.logistics.service.logistics.product.dto.request.ProductCreateRequestDto;
+import msa.logistics.service.logistics.product.dto.request.ProductUpdateRequestDto;
 import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class ProductService {
                 .map(ProductResponseDto::new)
                 .collect(Collectors.toList());
     }
+
     // 상품 수정
     @Transactional
     public void updateProduct(UUID productId, ProductUpdateRequestDto request) {
@@ -56,5 +58,14 @@ public class ProductService {
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.updateProduct(request.getProductName(), request.getStockQuantity());
+    }
+
+    // 상품 삭제 (논리적 삭제)
+    @Transactional
+    public void deleteProduct(UUID productId) {
+        Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        product.markAsDeleted();
     }
 }

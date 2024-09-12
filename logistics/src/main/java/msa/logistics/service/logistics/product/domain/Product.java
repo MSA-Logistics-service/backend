@@ -38,9 +38,14 @@ public class Product extends BaseEntity implements Serializable {
         this.vendorId = vendorId;
         this.hubId = hubId;
     }
+
     public void updateProduct(String productName, Long stockQuantity) {
         this.productName = productName;
         this.stockQuantity = stockQuantity;
+    }
+
+    public void markAsDeleted() {
+        this.isDelete = true;
     }
 
 }
