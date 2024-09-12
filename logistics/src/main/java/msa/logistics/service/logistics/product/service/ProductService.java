@@ -38,6 +38,7 @@ public class ProductService {
     }
 
     // 상품 상세 조회
+    @Transactional(readOnly = true)
     public ProductResponseDto getProduct(UUID productId) {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -45,6 +46,7 @@ public class ProductService {
     }
 
     // 특정 업체의 상품 목록 조회
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getProductsByVendor(UUID vendorId) {
         List<Product> products = productRepository.findByVendorIdAndIsDeleteFalse(vendorId);
         return products.stream()
