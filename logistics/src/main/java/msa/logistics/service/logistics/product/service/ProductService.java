@@ -10,7 +10,9 @@ import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +40,13 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         return new ProductResponseDto(product);
+    }
+
+    // 특정 업체의 상품 목록 조회
+    public List<ProductResponseDto> getProductsByVendor(UUID vendorId) {
+        List<Product> products = productRepository.findByVendorIdAndIsDeleteFalse(vendorId);
+        return products.stream()
+                .map(ProductResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -38,6 +39,15 @@ public class ProductController {
     public ResponseEntity<ApiResponseDto<ProductResponseDto>> getProduct(@PathVariable UUID productId) {
         ProductResponseDto product = productService.getProduct(productId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 상세 정보 조회 성공", product));
+    }
+
+    /**
+     * 특정 업체의 상품 목록 조회
+     */
+    @GetMapping("/vendors/{vendorId}")
+    public ResponseEntity<ApiResponseDto<List<ProductResponseDto>>> getProductsByVendor(@PathVariable UUID vendorId) {
+        List<ProductResponseDto> products = productService.getProductsByVendor(vendorId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "업체의 전체 상품 목록", products));
     }
 
 }
