@@ -1,8 +1,11 @@
 package msa.logistics.service.logistics.product.service;
 
 import lombok.RequiredArgsConstructor;
+import msa.logistics.service.logistics.common.exception.CustomException;
+import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.product.domain.Product;
 import msa.logistics.service.logistics.product.dto.request.ProductCreateRequestDto;
+import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,5 +31,12 @@ public class ProductService {
 
         productRepository.save(product);
         return product.getProductId();
+    }
+
+    // 상품 상세 조회
+    public ProductResponseDto getProduct(UUID productId) {
+        Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        return new ProductResponseDto(product);
     }
 }
