@@ -49,4 +49,12 @@ public class ProductService {
                 .map(ProductResponseDto::new)
                 .collect(Collectors.toList());
     }
+    // 상품 수정
+    @Transactional
+    public void updateProduct(UUID productId, ProductUpdateRequestDto request) {
+        Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        product.updateProduct(request.getProductName(), request.getStockQuantity());
+    }
 }

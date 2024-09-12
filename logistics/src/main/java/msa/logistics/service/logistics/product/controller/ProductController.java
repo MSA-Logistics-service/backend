@@ -49,5 +49,14 @@ public class ProductController {
         List<ProductResponseDto> products = productService.getProductsByVendor(vendorId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "업체의 전체 상품 목록", products));
     }
+    /**
+     * 상품 수정
+     */
+    @PutMapping("/{productId}")
+    public ResponseEntity<ApiResponseDto<Void>> updateProduct(@PathVariable UUID productId,
+                                                              @Valid @RequestBody ProductUpdateRequestDto request) {
+        productService.updateProduct(productId, request);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 수정 성공", null));
+    }
 
 }
