@@ -23,7 +23,7 @@ import msa.logistics.service.user.common.domain.BaseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "p_user")
+@Table(name = "p_users")
 public class User extends BaseEntity implements Serializable {
 
     @Id
