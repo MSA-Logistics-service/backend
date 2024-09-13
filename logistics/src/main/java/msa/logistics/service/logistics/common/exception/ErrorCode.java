@@ -8,6 +8,9 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     RESPONSE_NOT_FOUND(HttpStatus.NOT_FOUND, "응답을 찾을 수 없습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 거부되었습니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 상품을 찾을 수 없습니다."),
+    VENDOR_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 업체를 찾을 수 없습니다."),
+    HUB_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 허브를 찾을 수 없습니다."),
 
 
     // ------ 5xx ------

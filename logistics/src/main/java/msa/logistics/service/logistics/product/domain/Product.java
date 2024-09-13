@@ -31,12 +31,26 @@ public class Product extends BaseEntity implements Serializable {
     @Column(name = "hub_id", nullable = false)    // 관리 허브 아이디
     private UUID hubId;
 
+    @Column(name = "description")
+    private String description;
+
     @Builder
-    public Product(String productName, Long stockQuantity, UUID vendorId, UUID hubId) {
+    public Product(String productName, Long stockQuantity, UUID vendorId, UUID hubId, String description) {
         this.productName = productName;
         this.stockQuantity = stockQuantity;
         this.vendorId = vendorId;
         this.hubId = hubId;
+        this.description = description;
+    }
+
+    public void updateProduct(String productName, Long stockQuantity, String description) {
+        this.productName = productName;
+        this.stockQuantity = stockQuantity;
+        this.description = description;
+    }
+
+    public void markAsDeleted() {
+        this.isDelete = true;
     }
 
 }
