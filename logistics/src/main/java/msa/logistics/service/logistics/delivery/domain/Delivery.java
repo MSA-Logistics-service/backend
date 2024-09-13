@@ -51,7 +51,12 @@ public class Delivery extends BaseEntity {
 
     //수령인 아이디 -user 서비스에서 조회
     @Column(name = "receiver_id" , nullable = false)
-    private String receiverId;
+    private UUID receiverId;
+
+
+    // 주문 아이디 : test 용
+    @Column(name = "order_id" ,nullable = false)
+    private UUID orderId;
 
     //주문 아이디
 
@@ -67,5 +72,9 @@ public class Delivery extends BaseEntity {
     public enum DeliveryStatus {
         WAITING, IN_TRANSIT, ARRIVED, DELIVERED
     }
+
+
+
+
 
 }
