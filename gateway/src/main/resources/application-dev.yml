@@ -12,3 +12,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+service:
+  jwt:
+    secret-key: paieRY4DK8B5jo8NRHQRVo8Ljs2zJgWbEDjbJ3cTVKVac7oftXqVaFmoaC9ouoAp
