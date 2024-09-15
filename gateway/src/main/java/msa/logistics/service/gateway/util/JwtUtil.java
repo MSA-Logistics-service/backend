@@ -8,11 +8,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -74,9 +74,9 @@ public class JwtUtil {
     }
 
     // HttpServletRequest 에서 Authorization 헤더의 JWT 가져오기
-    public String getTokenFromRequest(HttpServletRequest req) {
+    public String getTokenFromRequest(ServerHttpRequest req) {
         // Authorization 헤더에서 JWT 가져오기
-        String bearerToken = req.getHeader(AUTHORIZATION_HEADER);
+        String bearerToken = req.getHeaders().getFirst(AUTHORIZATION_HEADER);
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7); // "Bearer " 접두사 제거

@@ -1,9 +1,9 @@
 package msa.logistics.service.gateway.config;
 
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.gateway.client.UserServiceClient;
 import msa.logistics.service.gateway.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 
+@Slf4j
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -42,13 +43,16 @@ public class SecurityConfig {
     @Bean
     public WebFilter jwtAuthenticationFilter(JwtUtil jwtUtil) {
         return (exchange, chain) -> {
+
+            log.info("check filter run");
+
             // /auth/login 경로는 필터를 적용하지 않음
             if (exchange.getRequest().getURI().getPath().equals("/api/v1/auth/sign-up")
                     || exchange.getRequest().getURI().getPath().equals("/api/v1/auth/sign-in")) {
                 return chain.filter(exchange);
             }
 
-            String tokenValue = jwtUtil.getTokenFromRequest((HttpServletRequest) exchange.getRequest());
+            String tokenValue = jwtUtil.getTokenFromRequest(exchange.getRequest());
 
             if (StringUtils.hasText(tokenValue)) {
                 // JWT 토큰 substring
