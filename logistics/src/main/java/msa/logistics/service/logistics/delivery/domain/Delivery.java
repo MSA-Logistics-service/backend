@@ -3,6 +3,7 @@ package msa.logistics.service.logistics.delivery.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
+import msa.logistics.service.logistics.delivery.dto.DeliveryStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "p_delivery")
+@Table(name = "p_deliveries")
 public class Delivery extends BaseEntity {
 
 
@@ -68,10 +69,6 @@ public class Delivery extends BaseEntity {
     private List<DeliveryRoute> deliveryRouteList;
 
 
-
-    public enum DeliveryStatus {
-        WAITING, IN_TRANSIT, ARRIVED, DELIVERED
-    }
 
 
 
