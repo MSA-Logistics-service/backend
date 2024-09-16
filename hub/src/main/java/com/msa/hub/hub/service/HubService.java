@@ -17,7 +17,6 @@ import java.util.UUID;
 public class HubService {
 
     private final HubRepository hubRepository;
-    private final HubRequestDto hubRequestDto;
 
     @Transactional
     public Hub registerHub(HubResponseDto hubDTO) {
