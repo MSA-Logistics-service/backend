@@ -6,6 +6,7 @@ import msa.logistics.service.logistics.delivery.domain.Delivery;
 
 import msa.logistics.service.logistics.delivery.dto.DeliveryCreateRequestDto;
 import msa.logistics.service.logistics.delivery.dto.DeliveryEditRequestDto;
+import msa.logistics.service.logistics.delivery.dto.DeliveryStatus;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class DeliveryService {
         Delivery delivery = Delivery.builder()
                 .orderId(orderId)
                 .deliveryAddress(deliveryAddress)
-                .deliveryStatus(Delivery.DeliveryStatus.WAITING) // 기본값 설정
+                .deliveryStatus(DeliveryStatus.WAITING) // 기본값 설정
                 .StartHubId(startHubId)
                 .destinationHubId(destinationHubId)
                 .currentHubId(startHubId)

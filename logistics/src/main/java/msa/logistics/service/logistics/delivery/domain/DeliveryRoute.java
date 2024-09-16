@@ -3,6 +3,7 @@ package msa.logistics.service.logistics.delivery.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
+import msa.logistics.service.logistics.delivery.dto.RouteStatus;
 
 import java.util.UUID;
 @Getter
@@ -11,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "p_delivery_route")
+@Table(name = "p_delivery_routes")
 public class DeliveryRoute extends BaseEntity {
 
     //경로 기록 아이디
@@ -58,8 +59,6 @@ public class DeliveryRoute extends BaseEntity {
     private Delivery delivery;
 
 
-    public enum RouteStatus {
-        WAITING, IN_TRANSIT, ARRIVED, DELIVERED
-    }
+
 
 }

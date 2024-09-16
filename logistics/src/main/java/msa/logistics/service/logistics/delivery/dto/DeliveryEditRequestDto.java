@@ -14,7 +14,7 @@ public class DeliveryEditRequestDto {
     private String deliveryAddress;
 
     //배송 상태
-    private Delivery.DeliveryStatus deliveryStatus;
+    private DeliveryStatus deliveryStatus;
 
     // 수령인 슬랙 아이디
     private String recevierSlackId;
