@@ -2,6 +2,7 @@ package com.msa.hub.vendor.domain;
 
 import com.msa.hub.common.entity.BaseEntity;
 import com.msa.hub.hub.domain.Hub;
+import com.msa.hub.vendor.dto.VendorRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,11 +39,25 @@ public class Vendor extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    // 생성자
     public Vendor(String vendorName, VendorType vendorType, String vendorAddress, Hub hub, Long userId) {
         this.vendorName = vendorName;
         this.vendorType = vendorType;
         this.vendorAddress = vendorAddress;
         this.hub = hub;
         this.userId = userId;
+    }
+
+    // Vendor 업데이트 메서드
+    public void update(VendorRequestDto vendorRequestDto, Hub hub) {
+        this.vendorName = vendorRequestDto.getVendorName();
+        this.vendorType = vendorRequestDto.getVendorType();
+        this.vendorAddress = vendorRequestDto.getVendorAddress();
+        this.hub = hub;  // Hub 변경 가능
+    }
+
+    // 소프트 삭제 메서드
+    public void delete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }
