@@ -19,32 +19,55 @@ public class HubService {
     private final HubRepository hubRepository;
 
     @Transactional
-    public Hub registerHub(HubResponseDto hubDTO) {
-        // Hub 엔터티로 변환
+    public HubResponseDto registerHub(HubRequestDto hubRequestDto) {
+        // hubRank가 0이거나 null이면 가장 큰 hubRank에 1을 더해 설정
+        Double hubRank = hubRequestDto.getHubRank();
+        if (hubRank == null || hubRank == 0) {
+            hubRank = hubRepository.findMaxHubRank() + 1;
+        } else {
+            // hubRank가 0이 아닌 값이 들어오면, 해당 값 이상인 모든 hubRank를 1씩 증가시킴
+            hubRepository.incrementHubRankGreaterThanOrEqual(hubRank);
+        }
+
+        // Hub 엔티티 생성
         Hub hub = new Hub(
-                hubDTO.getHubName(),
-                hubDTO.getHubAddress(),
-                hubDTO.getHubLatitude(),
-                hubDTO.getHubLongitude()
+                hubRequestDto.getHubName(),
+                hubRequestDto.getHubAddress(),
+                hubRequestDto.getHubLatitude(),
+                hubRequestDto.getHubLongitude(),
+                hubRank
         );
 
-        // 엔터티 저장
-        return hubRepository.save(hub);
+        // 엔티티 저장
+        hubRepository.save(hub);
+
+        return new HubResponseDto(hub);
     }
 
     // Hub 수정
     @Transactional
-    public HubResponseDto updateHub(UUID hubId, HubRequestDto hubRequestDto, String userRole) {
+    public HubResponseDto updateHub(UUID hubId, HubRequestDto hubRequestDto, String user, String userRole) {
         // 해당 Hub가 DB에 존재하는지 확인
         Hub hub = hubRepository.findById(hubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
 
-        // 관리자만 수정 가능
-        //if (userRole.equals("ADMIN")) {
-            hub.update(hubRequestDto, userRole);  // Hub 엔터티에 update 메서드를 통해 필드를 업데이트
-//        } else {
-//            throw new IllegalArgumentException("해당 Hub를 수정할 권한이 없습니다.");
-//        }
+        // 관리자만 수정 가능 (예시로 userRole을 검사)
+        if (!userRole.equals("ADMIN")) {
+            throw new IllegalArgumentException("해당 Hub를 수정할 권한이 없습니다.");
+        }
+
+        // hubRank가 0이거나 null이면 가장 큰 hubRank에 1을 더해 설정
+        Double hubRank = hubRequestDto.getHubRank();
+        if (hubRank == null || hubRank == 0) {
+            hubRank = hubRepository.findMaxHubRank() + 1;
+        } else {
+            // hubRank가 0이 아닌 값이 들어오면, 해당 값 이상인 모든 hubRank를 1씩 증가시킴
+            hubRepository.incrementHubRankGreaterThanOrEqual(hubRank);
+        }
+
+        // Hub 정보 업데이트
+        hub.update(hubRequestDto, user);
+
 
         // 수정된 Hub 데이터를 반환
         return new HubResponseDto(hub);
@@ -53,11 +76,19 @@ public class HubService {
     // Hub 삭제 (is_delete = true 로 설정)
     @Transactional
     public void deleteHub(UUID hubId) {
+        // 해당 Hub가 DB에 존재하는지 확인
         Hub hub = hubRepository.findById(hubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
 
-        hub.delete(true); // 소프트 삭제 처리
-        hubRepository.save(hub); // DB에 변경 사항 저장
+        // 삭제 대상 hubRank 값 저장
+        Double hubRankToDelete = hub.getHubRank();
+
+        // 소프트 삭제 처리 (isDelete = true)
+        hub.delete(true);
+        hubRepository.save(hub);
+
+        // 삭제된 hubRank보다 큰 값들의 hubRank를 1씩 감소시킴
+        hubRepository.decrementHubRankGreaterThan(hubRankToDelete);
     }
 
     // Hub 상세 조회 (is_delete = false인 항목만)

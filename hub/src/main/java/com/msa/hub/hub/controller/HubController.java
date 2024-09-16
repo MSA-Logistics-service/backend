@@ -24,8 +24,8 @@ public class HubController {
     // 허브 등록
     // 마스터 관리자만 가능
     @PostMapping
-    public ResponseEntity<Hub> registerHub(@RequestBody HubResponseDto hubDTO) {
-        Hub registeredHub = hubService.registerHub(hubDTO);
+    public ResponseEntity<HubResponseDto> registerHub(@RequestBody HubRequestDto hubRequestDto) {
+        HubResponseDto registeredHub = hubService.registerHub(hubRequestDto);
         return ResponseEntity.ok(registeredHub);
     }
 
@@ -36,8 +36,12 @@ public class HubController {
     public ResponseEntity<HubResponseDto> updateHub(
             @PathVariable UUID hubId,
             @RequestBody HubRequestDto hubRequestDto,
-            @RequestParam String userRole) {
-        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, userRole);
+            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
+            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
+
+        // 서비스에서 Hub 수정 로직 호출
+        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, user, userRole);
+
         return ResponseEntity.ok(updatedHub);
     }
 

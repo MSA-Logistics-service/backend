@@ -30,12 +30,17 @@ public class Hub extends BaseEntity {
     @Column(name = "hub_longitude", nullable = false)
     private Double hubLongitude;
 
+    @Column(name = "hub_rank", nullable = false)
+    private Double hubRank;
+
     // 생성자
-    public Hub(String hubName, String hubAddress, Double hubLatitude, Double hubLongitude) {
+    public Hub(String hubName, String hubAddress, Double hubLatitude, Double hubLongitude, Double hubRank) {
         this.hubName = hubName;
         this.hubAddress = hubAddress;
         this.hubLatitude = hubLatitude;
         this.hubLongitude = hubLongitude;
+        this.hubRank = hubRank;
+
     }
     // HubRequestDto를 사용하여 필드를 업데이트
     public void update(HubRequestDto hubRequestDto, String user) {
@@ -43,6 +48,8 @@ public class Hub extends BaseEntity {
         this.hubAddress = hubRequestDto.getHubAddress();
         this.hubLatitude = hubRequestDto.getHubLatitude();
         this.hubLongitude = hubRequestDto.getHubLongitude();
+        this.hubRank = hubRequestDto.getHubRank();
+
         // 필요하다면 업데이트한 유저 정보도 기록할 수 있음
     }
 

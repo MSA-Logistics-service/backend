@@ -11,4 +11,5 @@ public class HubRequestDto {
     private String hubAddress;
     private Double hubLatitude;
     private Double hubLongitude;
+    private Double hubRank;
 }
