@@ -1,6 +1,7 @@
 package com.msa.hub.hub.domain;
 
 import com.msa.hub.common.entity.BaseEntity;
+import com.msa.hub.hub.dto.HubRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,5 +36,18 @@ public class Hub extends BaseEntity {
         this.hubAddress = hubAddress;
         this.hubLatitude = hubLatitude;
         this.hubLongitude = hubLongitude;
+    }
+    // HubRequestDto를 사용하여 필드를 업데이트
+    public void update(HubRequestDto hubRequestDto, String user) {
+        this.hubName = hubRequestDto.getHubName();
+        this.hubAddress = hubRequestDto.getHubAddress();
+        this.hubLatitude = hubRequestDto.getHubLatitude();
+        this.hubLongitude = hubRequestDto.getHubLongitude();
+        // 필요하다면 업데이트한 유저 정보도 기록할 수 있음
+    }
+
+    // 소프트 삭제 처리
+    public void delete(Boolean isDelete) {
+        this.isDelete = isDelete;
     }
 }
