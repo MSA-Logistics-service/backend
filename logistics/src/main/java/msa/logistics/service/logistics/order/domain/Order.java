@@ -50,4 +50,15 @@ public class Order extends BaseEntity implements Serializable {
     public void setDeliveryId(Delivery delivery) {
         this.delivery = delivery;
     }
+
+    public void updateOrder(Integer quantity, Product product, Delivery delivery) {
+        this.quantity = quantity;
+        this.product = product;
+        this.delivery = delivery;
+    }
+
+    public void markAsDeleted() {
+        this.isDelete = true;
+    }
+
 }
