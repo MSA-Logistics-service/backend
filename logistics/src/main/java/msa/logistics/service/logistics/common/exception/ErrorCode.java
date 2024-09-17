@@ -16,7 +16,7 @@ public enum ErrorCode {
 
 
     // ------ 5xx ------
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 문제가 발생했습니다."),;
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 문제가 발생했습니다."), DELIVERY_CREATION_FAILED(HttpStatus.CREATED,"저장 실패" );
 
 
     private final HttpStatus status;
