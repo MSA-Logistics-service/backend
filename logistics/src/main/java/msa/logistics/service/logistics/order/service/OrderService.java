@@ -18,7 +18,9 @@ import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,12 +70,19 @@ public class OrderService {
 
 
     // 주문 상세 조회
-//    @Transactional(readOnly = true)
-//    public OrderResponseDto getOrderById(UUID orderId) {
-//        Order order = orderRepository.findById(orderId)
-//                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
-//
-//        return OrderResponseDto.from(order);
-//    }
+    @Transactional(readOnly = true)
+    public OrderResponseDto getOrderById(UUID orderId) {
+        Order order = orderRepository.findByOrderIdAndIsDeleteFalse(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
+        return new OrderResponseDto(order);
+    }
+
+    // 주문 전체 조회
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepository.findAllByIsDeleteFalse().stream()
+                .map(OrderResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

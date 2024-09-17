@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,9 +34,18 @@ public class OrderController {
     /**
      * 주문 상세 조회
      */
-//    @GetMapping("/{order_id}")
-//    public ResponseEntity<ApiResponseDto<OrderResponseDto>> getOrderById(@PathVariable("order_id") UUID orderId) {
-//        OrderResponseDto responseDto = orderService.getOrderById(orderId);
-//        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 상세 조회 성공", responseDto));
-//    }
+    @GetMapping("/{order_id}")
+    public ResponseEntity<ApiResponseDto<OrderResponseDto>> getOrderById(@PathVariable("order_id") UUID orderId) {
+        OrderResponseDto responseDto = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 상세 조회 성공", responseDto));
+    }
+
+    /**
+     * 주문 전체 조회
+     */
+    @GetMapping
+    public ResponseEntity<ApiResponseDto<List<OrderResponseDto>>> getAllOrders() {
+        List<OrderResponseDto> responseDtoList = orderService.getAllOrders();
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "전체 주문 조회 성공", responseDtoList));
+    }
 }
