@@ -16,7 +16,21 @@ services:
       - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - tiniping_network
-
+  users-db:
+    container_name: users_db
+    image: postgres
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: users_db
+      POSTGRES_PASSWORD: users_db
+      POSTGRES_DB: users
+    volumes:
+      - logistics_db:/var/lib/postgresql/data
+      - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tiniping_network
 
   zipkin:
     image: openzipkin/zipkin
