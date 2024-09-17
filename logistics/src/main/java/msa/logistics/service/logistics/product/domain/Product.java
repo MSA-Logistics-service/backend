@@ -3,6 +3,8 @@ package msa.logistics.service.logistics.product.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
+import msa.logistics.service.logistics.common.exception.CustomException;
+import msa.logistics.service.logistics.common.exception.ErrorCode;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -51,6 +53,17 @@ public class Product extends BaseEntity implements Serializable {
 
     public void markAsDeleted() {
         this.isDelete = true;
+    }
+
+    public void decreaseStock(Long quantity) {
+        if (this.stockQuantity < quantity) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_STOCK);
+        }
+        this.stockQuantity -= quantity;
+    }
+
+    public void increaseStock(Long quantity) {
+        this.stockQuantity += quantity;
     }
 
 }

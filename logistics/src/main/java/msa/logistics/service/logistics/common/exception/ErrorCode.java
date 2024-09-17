@@ -13,6 +13,7 @@ public enum ErrorCode {
     HUB_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 허브를 찾을 수 없습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 주문 정보를 찾을 수 없습니다."),
     DELIVERY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 배송 정보를 찾을 수 없습니다."),
+    INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "상품 재고가 부족합니다."),
 
 
     // ------ 5xx ------

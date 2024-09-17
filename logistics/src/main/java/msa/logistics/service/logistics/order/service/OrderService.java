@@ -39,6 +39,9 @@ public class OrderService {
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
+        // 재고 감소
+        product.decreaseStock(requestDto.getQuantity());
+
         // 주문 엔티티 생성
         Order order = Order.builder()
                 .quantity(requestDto.getQuantity())
@@ -61,7 +64,8 @@ public class OrderService {
             // 변경된 주문 저장
             orderRepository.save(order);
         } catch (Exception e) {
-            // 예외 발생 시 주문 생성 롤백
+            // 예외 발생 시 재고 복원 및 주문 롤백
+            product.increaseStock(requestDto.getQuantity());
             throw new CustomException(ErrorCode.DELIVERY_CREATION_FAILED);
         }
 
@@ -102,11 +106,16 @@ public class OrderService {
         order.updateOrder(requestDto.getQuantity(), product, delivery);
     }
 
-    // 주문 삭제
+    // 주문 취소 (취소 시 재고 복원)
     @Transactional
     public void deleteOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        // 재고 복원
+        Product product = order.getProduct();
+        product.increaseStock(order.getQuantity());
+
         order.markAsDeleted();
     }
 
