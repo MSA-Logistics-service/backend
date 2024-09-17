@@ -1,2 +1,6 @@
 ### IntelliJ IDEA ###
 /.idea/
+# Project exclude paths
+/msa.logistics.service.eureka/eureka/.gradle/
+/msa.logistics.service.eureka/eureka/build/
+/msa.logistics.service.eureka/eureka/build/classes/java/main/
