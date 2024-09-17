@@ -46,4 +46,8 @@ public class Order extends BaseEntity implements Serializable {
         this.product = product;
         this.delivery = delivery;
     }
+
+    public void setDeliveryId(Delivery delivery) {
+        this.delivery = delivery;
+    }
 }
