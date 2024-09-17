@@ -65,7 +65,8 @@ public class Delivery extends BaseEntity {
 //        private Order order;
 
 
-    @OneToMany(mappedBy = "delivery")
+    @OneToMany(mappedBy = "delivery", cascade =CascadeType.PERSIST)
+    @Column(name = "delivery_route")
     private List<DeliveryRoute> deliveryRouteList;
 
 
