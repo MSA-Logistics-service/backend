@@ -4,6 +4,8 @@ package msa.logistics.service.logistics.delivery.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import msa.logistics.service.logistics.common.exception.CustomException;
+import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
 
 import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
@@ -12,6 +14,8 @@ import msa.logistics.service.logistics.delivery.dto.DeliveryEditRequestDto;
 import msa.logistics.service.logistics.delivery.dto.DeliveryRouteResponseDto;
 import msa.logistics.service.logistics.delivery.dto.DeliveryStatus;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
+import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
+import msa.logistics.service.logistics.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -32,25 +36,27 @@ public class DeliveryService {
 
     private final DeliveryRouteService deliveryRouteService;
 
+
+
     //배달 생성
     @Transactional
-    public UUID createDelivery(DeliveryCreateRequestDto deliveryCreateRequestDto) {
+    public UUID createDelivery(OrderCreateRequestDto orderCreateRequestDto,UUID orderId) {
 
+        System.out.println("orderCreateRequestDto: " + orderCreateRequestDto);
         // 1. 배송지 주소 -> 업체 아이디를 통해 업체 주소 조회
-//        String deliveryAddress = vendorService.getVendorAddressById(deliveryCreateRequestDto.getReceiverVenderId());
+        //String deliveryAddress = vendorService.getVendorAddressById(orderCreateRequestDto.getSupplierVendorId());
         String deliveryAddress = "123 Test St, Test City, Test Country"; // 하드코딩된 배송지 주소
-        // 2. 주문 아이디
-//        UUID orderId = deliveryCreateRequestDto.getOrderId();
-        UUID orderId = UUID.fromString("123e4567-e89b-12d3-a456-426614174003"); // 하드코딩된 주문 아이디
+
+        //UUID orderId = UUID.fromString("123e4567-e89b-12d3-a456-426614174003"); // 하드코딩된 주문 아이디
 
         // 3. 출발 허브 아이디
-//        UUID startHubId = vendorService.getHubIdByVendorId(deliveryCreateRequestDto.getSupplierVenderId());
-        UUID startHubId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"); // 하드코딩된 출발 허브 아이디
+        UUID startHubId = orderCreateRequestDto.getSupplierVendorId();
+        //UUID startHubId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"); // 하드코딩된 출발 허브 아이디
         // 4. 도착 허브 아이디
-//       UUID destinationHubId = vendorService.getHubIdByVendorId(deliveryCreateRequestDto.getReceiverVenderId());
-        UUID destinationHubId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001"); // 하드코딩된 도착 허브 아이디
+        UUID destinationHubId = orderCreateRequestDto.getReceiverVendorId();
+//        UUID destinationHubId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001"); // 하드코딩된 도착 허브 아이디
         // 5. 수령자 아이디
-//        UUID receiverId = vendorService.getReceiverIdByVendorId(deliveryCreateRequestDto.getReceiverVenderId());
+        //UUID receiverId = vendorService.getReceiverIdByVendorId(destinationHubId);
         UUID receiverId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002"); // 하드코딩된 수령자 아이디
         // 배송 객체 생성
         Delivery delivery = Delivery.builder()
@@ -60,13 +66,16 @@ public class DeliveryService {
                 .StartHubId(startHubId)
                 .destinationHubId(destinationHubId)
                 .currentHubId(startHubId)
-                .receiverSlackId(deliveryCreateRequestDto.getRecevierSlackId())
+                .receiverSlackId(null)
                 .receiverId(receiverId)
                 .build();
 
 
         // 엔티티 저장
         Delivery savedDelivery = deliveryRepository.save(delivery);
+
+
+
 
 
         //배송 저장과 동시에 배송 경로 생성

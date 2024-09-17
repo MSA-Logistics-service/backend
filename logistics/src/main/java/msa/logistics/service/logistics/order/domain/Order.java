@@ -35,7 +35,7 @@ public class Order extends BaseEntity implements Serializable {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "delivery_id", nullable = false) // 배송 FK
+    @JoinColumn(name = "delivery_id") // 배송 FK
     private Delivery delivery;
 
     @Builder
