@@ -56,4 +56,9 @@ public class Order extends BaseEntity implements Serializable {
         this.product = product;
         this.delivery = delivery;
     }
+
+    public void markAsDeleted() {
+        this.isDelete = true;
+    }
+
 }

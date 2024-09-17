@@ -101,4 +101,13 @@ public class OrderService {
 
         order.updateOrder(requestDto.getQuantity(), product, delivery);
     }
+
+    // 주문 삭제
+    @Transactional
+    public void deleteOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+        order.markAsDeleted();
+    }
+
 }

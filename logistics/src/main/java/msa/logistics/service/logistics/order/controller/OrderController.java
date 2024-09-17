@@ -57,6 +57,15 @@ public class OrderController {
     public ResponseEntity<ApiResponseDto<Void>> updateOrder(@PathVariable("order_id") UUID orderId,
                                                             @RequestBody OrderUpdateRequestDto requestDto) {
         orderService.updateOrder(orderId, requestDto);
-        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문이 수정되었습니다.", null));
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 수정 성공", null));
+    }
+
+    /**
+     * 주문 삭제 (논리적 삭제)
+     */
+    @DeleteMapping("/{order_id}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteOrder(@PathVariable("order_id") UUID orderId) {
+        orderService.deleteOrder(orderId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 삭제 성공", null));
     }
 }
