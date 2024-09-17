@@ -3,7 +3,6 @@ package msa.logistics.service.logistics.delivery.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
-import msa.logistics.service.logistics.delivery.dto.DeliveryStatus;
 
 import java.util.List;
 import java.util.UUID;
