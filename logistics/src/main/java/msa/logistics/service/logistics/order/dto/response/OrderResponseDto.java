@@ -16,7 +16,7 @@ import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 public class OrderResponseDto {
 
     private UUID orderId;
-    private Integer quantity;
+    private Long quantity;
     private UUID supplierVendorId;
     private UUID receiverVendorId;
     private UUID productId;
