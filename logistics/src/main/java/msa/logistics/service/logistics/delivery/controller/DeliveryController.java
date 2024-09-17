@@ -25,15 +25,15 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     // 배송 생성
-    @PostMapping
-    public ResponseEntity<ApiResponseDto<String>> createDelivery(
-            @RequestBody DeliveryCreateRequestDto deliveryCreateRequestDto) {
-        UUID deliveryId = deliveryService.createDelivery(deliveryCreateRequestDto);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new ApiResponseDto<>(HttpStatus.CREATED, "배송이 생성되었습니다.", deliveryId.toString()));
-    }
+//    @PostMapping
+//    public ResponseEntity<ApiResponseDto<UUID>> createDelivery(
+//            @RequestBody DeliveryCreateRequestDto deliveryCreateRequestDto) {
+//        UUID deliveryId = deliveryService.createDelivery(deliveryCreateRequestDto);
+//
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(new ApiResponseDto<>(HttpStatus.CREATED, "배송이 생성되었습니다.", deliveryId));
+//    }
 
 
     // 배송 상세조회

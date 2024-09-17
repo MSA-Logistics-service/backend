@@ -1,5 +1,6 @@
 package msa.logistics.service.logistics.delivery.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
@@ -54,8 +55,9 @@ public class DeliveryRoute extends BaseEntity {
     private RouteStatus currentStatus = RouteStatus.WAITING;
 
     //배송
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", nullable = false)
+    @JsonIgnore
     private Delivery delivery;
 
 
