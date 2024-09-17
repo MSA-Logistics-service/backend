@@ -1,15 +1,14 @@
 package msa.logistics.service.auth.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.auth.dto.LoginRequestDto;
-import msa.logistics.service.auth.dto.LoginResponseDto;
 import msa.logistics.service.auth.security.UserDetailsImpl;
 import msa.logistics.service.auth.util.JwtUtil;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,9 +27,9 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/sign-in")
-    public void login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response)
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response)
             throws IOException {
-        
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
         );
@@ -43,11 +42,10 @@ public class AuthController {
         String jwt = jwtUtil.createToken(username, roles);
         jwtUtil.addJwtToHeader(jwt, response);
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto(username, rolesString);
-        String loginJsonResponse = new ObjectMapper().writeValueAsString(loginResponseDto);
+        response.addHeader("X-User-Id", username);
+        response.addHeader("X-User-Role", rolesString);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(loginJsonResponse);
+        return ResponseEntity.ok().body(username + "login success");
     }
+
 }
