@@ -1,10 +1,10 @@
 package msa.logistics.service.gateway.config;
 
 import io.jsonwebtoken.Claims;
-import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.gateway.client.UserServiceClient;
+import msa.logistics.service.gateway.dto.UserDto;
 import msa.logistics.service.gateway.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,16 +66,13 @@ public class SecurityConfig {
 
                 String username = claims.getSubject();
 
-                String foundUsername = Optional.ofNullable(userServiceClient.getUsernameByUsername(username))
-                        .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
-
-                List<String> foundRole = Optional.ofNullable(userServiceClient.getRoleByUsername(username))
+                UserDto userDto = Optional.ofNullable(userServiceClient.getUserByUsername(username))
                         .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
                 // 사용자 정보를 새로운 헤더에 추가
                 ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                        .header("X-User-Name", foundUsername)  // 사용자명 헤더 추가
-                        .header("X-User-Roles", String.join(",", foundRole))    // 권한 정보 헤더 추가
+                        .header("X-User-Name", userDto.getUsername())  // 사용자명 헤더 추가
+                        .header("X-User-Roles", String.join(",", userDto.getRoles()))    // 권한 정보 헤더 추가
                         .build();
 
                 // 수정된 요청으로 필터 체인 계속 처리
