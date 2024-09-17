@@ -11,6 +11,7 @@ import msa.logistics.service.logistics.delivery.repository.DeliveryRouteReposito
 import msa.logistics.service.logistics.delivery.service.DeliveryService;
 import msa.logistics.service.logistics.order.domain.Order;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
+import msa.logistics.service.logistics.order.dto.request.OrderUpdateRequestDto;
 import msa.logistics.service.logistics.order.dto.response.OrderResponseDto;
 import msa.logistics.service.logistics.order.repository.OrderRepository;
 import msa.logistics.service.logistics.product.domain.Product;
@@ -84,5 +85,20 @@ public class OrderService {
         return orderRepository.findAllByIsDeleteFalse().stream()
                 .map(OrderResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    // 주문 수정
+    @Transactional
+    public void updateOrder(UUID orderId, OrderUpdateRequestDto requestDto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        Product product = productRepository.findById(requestDto.getProductId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        Delivery delivery = deliveryRepository.findById(requestDto.getDeliveryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
+
+        order.updateOrder(requestDto.getQuantity(), product, delivery);
     }
 }

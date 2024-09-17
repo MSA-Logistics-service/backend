@@ -3,6 +3,7 @@ package msa.logistics.service.logistics.order.controller;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.common.dto.ApiResponseDto;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
+import msa.logistics.service.logistics.order.dto.request.OrderUpdateRequestDto;
 import msa.logistics.service.logistics.order.dto.response.OrderResponseDto;
 import msa.logistics.service.logistics.order.service.OrderService;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,15 @@ public class OrderController {
     public ResponseEntity<ApiResponseDto<List<OrderResponseDto>>> getAllOrders() {
         List<OrderResponseDto> responseDtoList = orderService.getAllOrders();
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "전체 주문 조회 성공", responseDtoList));
+    }
+
+    /**
+     * 주문 수정
+     */
+    @PutMapping("/{order_id}")
+    public ResponseEntity<ApiResponseDto<Void>> updateOrder(@PathVariable("order_id") UUID orderId,
+                                                            @RequestBody OrderUpdateRequestDto requestDto) {
+        orderService.updateOrder(orderId, requestDto);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문이 수정되었습니다.", null));
     }
 }
