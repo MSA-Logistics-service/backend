@@ -11,6 +11,7 @@ import msa.logistics.service.logistics.delivery.repository.DeliveryRouteReposito
 import msa.logistics.service.logistics.delivery.service.DeliveryService;
 import msa.logistics.service.logistics.order.domain.Order;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
+import msa.logistics.service.logistics.order.dto.response.OrderResponseDto;
 import msa.logistics.service.logistics.order.repository.OrderRepository;
 import msa.logistics.service.logistics.product.domain.Product;
 import msa.logistics.service.logistics.product.repository.ProductRepository;
@@ -68,5 +69,14 @@ public class OrderService {
         return deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
     }
+
+    // 주문 상세 조회
+//    @Transactional(readOnly = true)
+//    public OrderResponseDto getOrderById(UUID orderId) {
+//        Order order = orderRepository.findById(orderId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+//
+//        return OrderResponseDto.from(order);
+//    }
 
 }
