@@ -3,21 +3,12 @@ package msa.logistics.service.logistics.delivery.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import msa.logistics.service.logistics.common.exception.CustomException;
-import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
 
-import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
-import msa.logistics.service.logistics.delivery.dto.DeliveryCreateRequestDto;
 import msa.logistics.service.logistics.delivery.dto.DeliveryEditRequestDto;
-import msa.logistics.service.logistics.delivery.dto.DeliveryRouteResponseDto;
-import msa.logistics.service.logistics.delivery.dto.DeliveryStatus;
+import msa.logistics.service.logistics.delivery.domain.DeliveryStatus;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
-import msa.logistics.service.logistics.order.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

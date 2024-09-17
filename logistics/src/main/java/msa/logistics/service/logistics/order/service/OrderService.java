@@ -30,7 +30,6 @@ public class OrderService {
     private final DeliveryService deliveryService;
 
     // 주문 생성 (배송 생성 API 호출)
-    // 주문 생성 (배송 생성 API 호출)
     @Transactional
     public UUID createOrder(OrderCreateRequestDto requestDto) {
         // 상품 확인
@@ -46,16 +45,27 @@ public class OrderService {
                 .build();
         // 주문 저장
         orderRepository.save(order);
+
+        UUID deliveryId;
         // 생성된 Order 객체를 DeliveryService에 전달하여 배송 생성
         try {
-            deliveryService.createDelivery(requestDto,order.getOrderId()); // 주문 객체를 전달
+            deliveryId = deliveryService.createDelivery(requestDto,order.getOrderId()); // 주문 객체를 전달
+            Delivery delivery = deliveryService.getDeliveryById(deliveryId);
+
+            // 배송 객체를 주문에 설정
+            order.setDeliveryId(delivery);
+
+            // 변경된 주문 저장
+            orderRepository.save(order);
         } catch (Exception e) {
             // 예외 발생 시 주문 생성 롤백
             throw new CustomException(ErrorCode.DELIVERY_CREATION_FAILED);
         }
+
         // 모든 작업이 성공적으로 완료되었을 때 트랜잭션 커밋
         return order.getOrderId();
     }
+
 
     // 주문 상세 조회
 //    @Transactional(readOnly = true)

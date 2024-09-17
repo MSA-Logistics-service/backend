@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import msa.logistics.service.logistics.common.entity.BaseEntity;
-import msa.logistics.service.logistics.delivery.dto.RouteStatus;
 
 import java.util.UUID;
 @Getter

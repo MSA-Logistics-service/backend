@@ -1,7 +1,7 @@
 package msa.logistics.service.logistics.delivery.dto;
 
 import lombok.*;
-import msa.logistics.service.logistics.delivery.domain.Delivery;
+import msa.logistics.service.logistics.delivery.domain.DeliveryStatus;
 
 
 @AllArgsConstructor
