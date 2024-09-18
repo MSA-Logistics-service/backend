@@ -46,7 +46,6 @@ public class UserService {
 
         if (!isMaster(roles)) {
             if (!user.getUsername().equals(username)) {
-                log.info("!!");
                 throw new CustomException(ErrorCode.USER_NOT_AUTHORIZATION);
             }
         }
@@ -60,7 +59,6 @@ public class UserService {
                 .toList();
 
         for (UserRole userRole : userRoles) {
-            log.info(userRole.toString());
             if (UserRole.MASTER.equals(userRole)) {
                 return true;
             }
