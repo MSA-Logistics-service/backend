@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize ->
                 authorize
                         .requestMatchers("/api/v1/users/sign-up").permitAll()  // 회원 가입 경로는 인증 없이 허용
-                        .requestMatchers("/api/v1/users/{username}").permitAll()
+                        .requestMatchers("/api/v1/users/user/{username}").permitAll()
                         .anyRequest().authenticated()  // 나머지 요청은 인증 필요
         );
 

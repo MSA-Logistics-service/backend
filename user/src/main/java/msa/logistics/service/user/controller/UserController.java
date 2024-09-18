@@ -30,12 +30,12 @@ public class UserController {
         return userService.registerUser(signUpDto);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/user/{username}")
     UserDto getUserByUsername(@PathVariable("username") String username) {
         return userService.getUserByUsername(username);
     }
 
-    @GetMapping("/user/{user_id}")
+    @GetMapping("/{user_id}")
     ResponseEntity<ApiResponseDto<UserResponseDto>> getUserById(@PathVariable("user_id") Long userId,
                                                                 @RequestHeader("X-User-Name") String username,
                                                                 @RequestHeader("X-User-Roles") String roles) {
