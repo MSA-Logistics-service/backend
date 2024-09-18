@@ -58,7 +58,7 @@ public class HubService {
         }
 
         Integer hubRank = hubRequestDto.getHubRank();
-        if (hubRank > 0) {
+        if (hubRank != null && hubRank > 0) {
             // hubRank가 0이 아닌 값이 들어오면, 해당 값 이상인 모든 hubRank를 1씩 증가시킴
             hubRepository.incrementHubRankGreaterThanOrEqual(hubRank);
         }
