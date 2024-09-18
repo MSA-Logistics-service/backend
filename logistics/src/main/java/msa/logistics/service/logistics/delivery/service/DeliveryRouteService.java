@@ -4,8 +4,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
 import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
-import msa.logistics.service.logistics.delivery.dto.DeliveryRouteEditRequestDto;
+import msa.logistics.service.logistics.delivery.dto.request.DeliveryRouteEditRequestDto;
 import msa.logistics.service.logistics.delivery.dto.HubPathData;
+import msa.logistics.service.logistics.delivery.dto.response.DeliveryRouteResponseDto;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRouteRepository;
 import org.springframework.data.domain.Page;
@@ -22,16 +23,12 @@ import java.util.UUID;
 @Service
 public class DeliveryRouteService {
 
-
     private final DeliveryRepository deliveryRepository;
     private final DeliveryRouteRepository deliveryRouteRepository;
-
-
 
     // 하드코딩된 데이터를 사용한 createDeliveryRoute 메서드
     @Transactional
     public void createDeliveryRoute(Delivery delivery, UUID deliveryId) {
-
         UUID startHubId = deliveryRepository.findById(deliveryId).get().getStartHubId();
         UUID destinationHubId = deliveryRepository.findById(deliveryId).get().getDestinationHubId();
         System.out.println("startHubId: " + startHubId + ", destinationHubId: " + destinationHubId);
@@ -55,91 +52,46 @@ public class DeliveryRouteService {
             deliveryRoute.setDestinationHubId(hubPathData.getDestinationHubId());
             System.out.println("deliveryRoute: " + deliveryRoute);
             // 추가로 필요한 정보를 설정
-//            deliveryRoute.setEstimatedDistance(hubPathData.getEstimatedDistance());
-//            deliveryRoute.setDuration(hubPathData.getDuration());
+            // deliveryRoute.setEstimatedDistance(hubPathData.getEstimatedDistance());
+            // deliveryRoute.setDuration(hubPathData.getDuration());
 
             // 실제 저장
             deliveryRouteRepository.save(deliveryRoute);
         }
 
         System.out.println("Delivery ID: " + deliveryId + "에 대한 경로가 생성되었습니다.");
-
-
     }
 
-
+    // 배송 상세 조회
     @Transactional
     public Optional<DeliveryRoute> getDeliveryRouteById(UUID deliveryRouteId) {
-
-       Optional<DeliveryRoute> deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId);
-
-
+        Optional<DeliveryRoute> deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId);
         return deliveryRoute;
     }
 
-
-//    @Transactional
-//    public DeliveryRoute editDelivery(UUID deliveryRouteId, DeliveryRouteEditRequestDto deliveryRouteEditRequestDto) {
-//        DeliveryRoute deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId).orElse(null);
-//
-//        //상품 수정 시 상품 상태 변경
-//        deliveryRoute.setCurrentStatus(deliveryRouteEditRequestDto.getRouteStatus());
-//
-//
-//
-//        return deliveryRoute;
-//    }
-
+    // 수정
     @Transactional
-    public DeliveryRoute editDeliveryRoute(UUID deliveryRouteId, DeliveryRouteEditRequestDto deliveryRouteEditRequestDto) {
-            DeliveryRoute deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId).orElse(null);
+    public DeliveryRouteResponseDto editDeliveryRoute(UUID deliveryRouteId, DeliveryRouteEditRequestDto deliveryRouteEditRequestDto) {
+        DeliveryRoute deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId).orElse(null);
 
-            //상품 수정 시 상품 상태 변경
-            deliveryRoute.setCurrentStatus(deliveryRouteEditRequestDto.getRouteStatus());
+        // 상품 수정 시 상품 상태 변경
+        deliveryRoute.setCurrentStatus(deliveryRouteEditRequestDto.getRouteStatus());
 
+        return DeliveryRouteResponseDto.fromEntityForUpdate(deliveryRoute);
+    }
 
-
-            return deliveryRoute;
-        }
-
-        //배송 삭제
-        @Transactional
+    // 배송 삭제
+    @Transactional
     public void deleteDeliveryRoute(UUID deliveryRouteId) {
-
         deliveryRouteRepository.deleteById(deliveryRouteId);
-
     }
 
-    //배송 목록 조회
+    // 배송 목록 조회
     @Transactional
-    public Page<DeliveryRoute> searchDeliveryRoutes(String filter, int page, int limit) {
-
-        //페이지 및 필터 설정
-        Pageable pageable=  PageRequest.of(page, limit);
-
-        Page<DeliveryRoute> delieveryRoutePage = deliveryRouteRepository.findAll(pageable);
-
-        Page<DeliveryRoute> deliberyRouteDto = delieveryRoutePage.map(deliveryRoute -> {
-            DeliveryRoute deliveryRoutes = new DeliveryRoute();
-            deliveryRoutes.setDelivery(deliveryRoute.getDelivery());
-            deliveryRoutes.setStartHubId(deliveryRoute.getStartHubId());
-            deliveryRoutes.setDestinationHubId(deliveryRoute.getDestinationHubId());
-            return deliveryRoute;
-        });
-
-
-
-
-        return deliberyRouteDto;
+    public Page<DeliveryRouteResponseDto> searchDeliveryRoutes(String filter, int page, int limit) {
+        // 페이지 및 필터 설정
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<DeliveryRoute> deliveryRoutePage = deliveryRouteRepository.findAll(pageable);
+        return deliveryRoutePage.map(DeliveryRouteResponseDto::fromEntity);
     }
-
-
-
-        }
-
-
-
-
-
-
-
+}

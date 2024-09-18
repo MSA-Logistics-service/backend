@@ -1,4 +1,4 @@
-package msa.logistics.service.logistics.delivery.dto;
+package msa.logistics.service.logistics.delivery.dto.request;
 
 import lombok.*;
 import msa.logistics.service.logistics.delivery.domain.DeliveryStatus;
@@ -17,7 +17,8 @@ public class DeliveryEditRequestDto {
     private DeliveryStatus deliveryStatus;
 
     // 수령인 슬랙 아이디
-    private String recevierSlackId;
+    private String receiverSlackId;
+
 
 
 }
