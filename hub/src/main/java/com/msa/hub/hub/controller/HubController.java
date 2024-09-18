@@ -57,9 +57,9 @@ public class HubController {
 
     // Hub 상세 조회
     @GetMapping("/{hubId}")
-    public ResponseEntity<Hub> getHubDetail(@PathVariable UUID hubId) {
-        Optional<Hub> hub = hubService.getHubDetail(hubId);
-        return hub.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<HubResponseDto> getHubDetail(@PathVariable UUID hubId) {
+        Optional<HubResponseDto> hubResponseDto = hubService.getHubDetail(hubId);
+        return hubResponseDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // 모든 Hub 조회 (is_delete = false인 항목만 페이지네이션 및 정렬 추가)

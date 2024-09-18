@@ -24,11 +24,11 @@ spring:
         - id: logistics
           uri: lb://logistics
           predicates:
-            - Path=/api/v1/shipping-managers/**, /api/v1/vendors/**, /api/v1/products/**, /api/v1/orders/**, /api/v1/deliveries/**, /api/v1/delivery-routes/**
+            - Path=/api/v1/shipping-managers/**, /api/v1/products/**, /api/v1/orders/**, /api/v1/deliveries/**, /api/v1/delivery-routes/**
         - id: hub
           uri: lb://hub
           predicates:
-            - Path=/api/v1/hub/**, /api/v1/hub-path/**
+            - Path=/api/v1/hub/**, /api/v1/hub-path/**, /api/v1/vendors/**
       discovery:
         locator:
           enabled: true  # 서비스 디스커버리를 통해 동적으로 라우트를 생성하도록 설정

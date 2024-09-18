@@ -16,4 +16,13 @@ public enum UserRole {
     public String getAuthority() {
         return this.authority;
     }
+
+    public static UserRole fromString(String role) {
+        for (UserRole userRole : UserRole.values()) {
+            if (userRole.authority.equalsIgnoreCase(role)) {
+                return userRole;
+            }
+        }
+        throw new IllegalArgumentException("Invalid role: " + role);
+    }
 }
