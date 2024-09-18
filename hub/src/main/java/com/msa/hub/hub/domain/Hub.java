@@ -5,6 +5,7 @@ import com.msa.hub.hub.dto.HubRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @Table(name = "p_hub")
+@SQLRestriction("is_delete is false")
 public class Hub extends BaseEntity {
     @Id
     @GeneratedValue
@@ -44,12 +46,11 @@ public class Hub extends BaseEntity {
     }
     // HubRequestDto를 사용하여 필드를 업데이트
     public void update(HubRequestDto hubRequestDto, String user) {
-        this.hubName = hubRequestDto.getHubName();
-        this.hubAddress = hubRequestDto.getHubAddress();
-        this.hubLatitude = hubRequestDto.getHubLatitude();
-        this.hubLongitude = hubRequestDto.getHubLongitude();
-        this.hubRank = hubRequestDto.getHubRank();
-
+        this.hubName = hubRequestDto.getHubName() != null ? hubRequestDto.getHubName() : this.hubName;
+        this.hubAddress = hubRequestDto.getHubAddress() != null ? hubRequestDto.getHubAddress() : this.hubAddress;
+        this.hubLatitude = hubRequestDto.getHubLatitude() != null ? hubRequestDto.getHubLatitude() : this.hubLatitude;
+        this.hubLongitude = hubRequestDto.getHubLongitude() != null ? hubRequestDto.getHubLongitude() : this.hubLongitude;
+        this.hubRank = hubRequestDto.getHubRank() != null ? hubRequestDto.getHubRank() : this.hubRank;
         // 필요하다면 업데이트한 유저 정보도 기록할 수 있음
     }
 
