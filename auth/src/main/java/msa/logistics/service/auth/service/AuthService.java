@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.auth.client.UserServiceClient;
+import msa.logistics.service.auth.domain.User;
 import msa.logistics.service.auth.dto.LoginRequestDto;
 import msa.logistics.service.auth.dto.SignUpDto;
+import msa.logistics.service.auth.dto.UserDto;
 import msa.logistics.service.auth.security.UserDetailsImpl;
 import msa.logistics.service.auth.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +26,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserServiceClient userServiceClient;
+    private final RedisService redisService;
 
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
@@ -34,6 +37,10 @@ public class AuthService {
         Collection<GrantedAuthority> roles = ((UserDetailsImpl) authentication.getPrincipal()).getAuthorities();
         List<String> rolesList = roles.stream().map(GrantedAuthority::getAuthority).toList();
         String rolesString = rolesList.toString();
+
+        User user = (User) authentication.getPrincipal();
+        UserDto userDto = UserDto.convertToUserDto(user);
+        redisService.setValue("user:" + username, userDto);
 
         String jwt = jwtUtil.createToken(username, roles);
         jwtUtil.addJwtToHeader(jwt, response);
