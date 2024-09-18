@@ -4,14 +4,16 @@ import com.msa.hub.common.entity.BaseEntity;
 import com.msa.hub.hub.domain.Hub;
 import com.msa.hub.vendor.dto.VendorRequestDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
+@Setter
+@Builder
 @Table(name = "p_vendor")
 public class Vendor extends BaseEntity {
 
