@@ -1,11 +1,17 @@
 package msa.logistics.service.user.service;
 
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import msa.logistics.service.user.common.exception.CustomException;
+import msa.logistics.service.user.common.exception.ErrorCode;
 import msa.logistics.service.user.domain.User;
+import msa.logistics.service.user.domain.UserRole;
 import msa.logistics.service.user.dto.SignUpDto;
 import msa.logistics.service.user.dto.UserDto;
+import msa.logistics.service.user.dto.UserResponseDto;
 import msa.logistics.service.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +36,35 @@ public class UserService {
 
     public UserDto getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("없는 username"));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return UserDto.convertToUserDto(user);
+    }
+
+    public UserResponseDto getUserById(Long userId, String username, String roles) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (!isMaster(roles)) {
+            if (!user.getUsername().equals(username)) {
+                log.info("!!");
+                throw new CustomException(ErrorCode.USER_NOT_AUTHORIZATION);
+            }
+        }
+
+        return UserResponseDto.convertToUserResponseDto(user);
+    }
+
+    public Boolean isMaster(String roles) {
+        List<UserRole> userRoles = Arrays.stream(roles.split(","))
+                .map(role -> UserRole.fromString(role.trim()))
+                .toList();
+
+        for (UserRole userRole : userRoles) {
+            log.info(userRole.toString());
+            if (UserRole.MASTER.equals(userRole)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
