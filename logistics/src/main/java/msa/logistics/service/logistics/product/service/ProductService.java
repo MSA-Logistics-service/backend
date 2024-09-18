@@ -3,7 +3,6 @@ package msa.logistics.service.logistics.product.service;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.client.hub.HubService;
 import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
-import msa.logistics.service.logistics.client.vendor.VendorService;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
 import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;

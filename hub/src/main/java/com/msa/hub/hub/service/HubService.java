@@ -91,8 +91,9 @@ public class HubService {
     }
 
     // Hub 상세 조회 (is_delete = false인 항목만)
-    public Optional<Hub> getHubDetail(UUID hubId) {
-        return hubRepository.findByHubIdAndIsDeleteFalse(hubId);
+    public Optional<HubResponseDto> getHubDetail(UUID hubId) {
+        return hubRepository.findByHubIdAndIsDeleteFalse(hubId)
+                            .map(HubResponseDto::new);
     }
 
     // 모든 Hub 조회 (is_delete = false인 항목만)
