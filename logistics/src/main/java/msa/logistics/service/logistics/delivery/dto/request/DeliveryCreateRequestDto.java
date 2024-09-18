@@ -1,4 +1,4 @@
-package msa.logistics.service.logistics.delivery.dto;
+package msa.logistics.service.logistics.delivery.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
