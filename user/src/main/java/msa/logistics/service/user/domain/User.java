@@ -12,16 +12,21 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.user.common.domain.BaseEntity;
+import msa.logistics.service.user.dto.SignUpDto;
 
 @Slf4j
 @ToString
 @Getter
+@Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "p_users")
 public class User extends BaseEntity implements Serializable {
@@ -47,4 +52,13 @@ public class User extends BaseEntity implements Serializable {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
+
+    public static User convertSignUpDtoToUser(SignUpDto signUpDto) {
+        return User.builder()
+                .username(signUpDto.getUsername())
+                .password(signUpDto.getPassword())
+                .nickname(signUpDto.getNickname())
+                .role(UserRole.fromString(signUpDto.getRole()))
+                .build();
+    }
 }

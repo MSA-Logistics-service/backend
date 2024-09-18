@@ -1,13 +1,16 @@
 package msa.logistics.service.gateway.config;
 
 import io.jsonwebtoken.Claims;
-import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.gateway.client.UserServiceClient;
+import msa.logistics.service.gateway.dto.UserDto;
+import msa.logistics.service.gateway.service.RedisService;
 import msa.logistics.service.gateway.util.JwtUtil;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
@@ -24,11 +27,18 @@ import org.springframework.web.server.WebFilter;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
     private final UserServiceClient userServiceClient;
 
-    public SecurityConfig(JwtUtil jwtUtil, UserServiceClient userServiceClient) {
+    public SecurityConfig(JwtUtil jwtUtil, UserServiceClient userServiceClient, RedisService redisService) {
         this.jwtUtil = jwtUtil;
         this.userServiceClient = userServiceClient;
+        this.redisService = redisService;
+    }
+
+    @Bean
+    public HttpMessageConverters messageConverters() {
+        return new HttpMessageConverters(new MappingJackson2HttpMessageConverter());
     }
 
     @Bean
@@ -56,33 +66,32 @@ public class SecurityConfig {
 
             if (StringUtils.hasText(tokenValue)) {
                 // JWT 토큰 substring
-                tokenValue = jwtUtil.substringToken(tokenValue);
+                // tokenValue = jwtUtil.substringToken(tokenValue);
 
                 if (!jwtUtil.validateToken(tokenValue)) {
-                    return chain.filter(exchange);
+                    exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
                 }
 
                 Claims claims = jwtUtil.getUserInfoFromToken(tokenValue);
 
                 String username = claims.getSubject();
 
-                String foundUsername = Optional.ofNullable(userServiceClient.getUsernameByUsername(username))
-                        .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
-
-                List<String> foundRole = Optional.ofNullable(userServiceClient.getRoleByUsername(username))
+                UserDto userDto = Optional.ofNullable(redisService.getValueAsClass("user:" + username, UserDto.class))
                         .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
                 // 사용자 정보를 새로운 헤더에 추가
                 ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
-                        .header("X-User-Name", foundUsername)  // 사용자명 헤더 추가
-                        .header("X-User-Roles", String.join(",", foundRole))    // 권한 정보 헤더 추가
+                        .header("X-User-Name", userDto.getUsername())  // 사용자명 헤더 추가
+                        .header("X-User-Roles", String.join(",", userDto.getRoles()))    // 권한 정보 헤더 추가
                         .build();
 
                 // 수정된 요청으로 필터 체인 계속 처리
                 ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
                 return chain.filter(modifiedExchange);
             }
-            return chain.filter(exchange);
+            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
         };
     }
 }

@@ -16,6 +16,21 @@ services:
       - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - tiniping_network
+  user-db:
+    container_name: user_db
+    image: postgres
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: user_db
+      POSTGRES_PASSWORD: user_db
+      POSTGRES_DB: user
+    volumes:
+      - user_db:/var/lib/postgresql/data
+      - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tiniping_network
 
   hub-db:
     container_name: hub_db
@@ -43,8 +58,15 @@ services:
     networks:
       - tiniping_network
 
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
 volumes:
   logistics_db:
+  user_db:
   hub_db:
 
 networks:
