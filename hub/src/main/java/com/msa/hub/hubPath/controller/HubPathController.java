@@ -37,9 +37,11 @@ public class HubPathController {
     @PatchMapping("/{hubPathId}")
     public ResponseEntity<HubPathResponseDto> updateHubPath(
             @PathVariable UUID hubPathId,
-            @RequestBody HubPathRequestDto hubPathRequestDto,
-            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
-            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
+            @RequestBody HubPathRequestDto hubPathRequestDto) {
+//            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
+//            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
+        String user = "test-user";
+        String userRole = "ADMIN";
 
         // 서비스에서 HubPath 수정 로직 호출
         HubPathResponseDto updatedHubPath = hubPathService.updateHubPath(hubPathId, hubPathRequestDto, user, userRole);
@@ -49,7 +51,7 @@ public class HubPathController {
 
     // HubPath 삭제 (소프트 삭제)
     // 마스터 관리자만 가능
-    @DeleteMapping("/delete/{hubPathId}")
+    @PatchMapping("/delete/{hubPathId}")
     public ResponseEntity<Void> deleteHubPath(@PathVariable UUID hubPathId) {
         hubPathService.deleteHubPath(hubPathId);
         return ResponseEntity.noContent().build();
