@@ -38,7 +38,7 @@ public class AuthService {
         List<String> rolesList = roles.stream().map(GrantedAuthority::getAuthority).toList();
         String rolesString = rolesList.toString();
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         UserDto userDto = UserDto.convertToUserDto(user);
         redisService.setValue("user:" + username, userDto);
 
