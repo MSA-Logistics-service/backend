@@ -17,7 +17,7 @@ public class Vendor extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "vendor_id", columnDefinition = "BINARY(16)")
+    @Column(name = "vendor_id", columnDefinition = "UUID")
     private UUID vendorId;
 
     @Column(name = "vendor_name", nullable = false)

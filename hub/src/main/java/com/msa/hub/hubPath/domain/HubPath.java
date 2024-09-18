@@ -17,7 +17,7 @@ public class HubPath extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "hub_path_duration", columnDefinition = "BINARY(16)")
+    @Column(name = "hub_path_duration", columnDefinition = "UUID")
     private UUID hubPathDuration;
 
     // 소요 시간은 Integer로 처리 (예: 분 단위)

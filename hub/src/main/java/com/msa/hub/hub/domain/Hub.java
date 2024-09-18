@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Hub extends BaseEntity {
     @Id
     @GeneratedValue
-    @Column(name = "hub_id", columnDefinition = "BINARY(16)")
+    @Column(name = "hub_id", columnDefinition = "UUID")
     private UUID hubId;
 
     @Column(name = "hub_name", nullable = false)
