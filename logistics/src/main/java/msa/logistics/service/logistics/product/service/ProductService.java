@@ -1,6 +1,8 @@
 package msa.logistics.service.logistics.product.service;
 
 import lombok.RequiredArgsConstructor;
+import msa.logistics.service.logistics.client.hub.HubService;
+import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
 import msa.logistics.service.logistics.client.vendor.VendorService;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
 import msa.logistics.service.logistics.common.exception.CustomException;
@@ -23,17 +25,20 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final VendorService vendorService;
+    private final HubService hubService;
 
 
     // 상품 생성
     @Transactional
     public UUID createProduct(ProductCreateRequestDto request) {
         // 업체 존재 여부 확인
-        VendorResponseDto vendor = Optional.ofNullable(vendorService.getVendor(request.getVendorId()))
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(request.getVendorId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
-        //TODO: 허브의 존재 여부 확인 로직 필요
+        // 허브 존재 여부 확인
+        HubResponseDto hub = Optional.ofNullable(hubService.getHub(request.getHubId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.HUB_NOT_FOUND));
+
         Product product = Product.builder()
                 .productName(request.getProductName())
                 .stockQuantity(request.getStockQuantity())
@@ -58,7 +63,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getProductsByVendor(UUID vendorId) {
         // 업체 존재 여부 확인
-        VendorResponseDto vendor = Optional.ofNullable(vendorService.getVendor(vendorId))
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(vendorId))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
         List<Product> products = productRepository.findByVendorIdAndIsDeleteFalse(vendorId);
