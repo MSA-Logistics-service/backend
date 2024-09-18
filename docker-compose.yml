@@ -32,6 +32,23 @@ services:
     networks:
       - tiniping_network
 
+  hub-db:
+    container_name: hub_db
+    image: postgres
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: hub_db
+      POSTGRES_PASSWORD: hub_db
+      POSTGRES_DB: hub
+    volumes:
+      - hub_db:/var/lib/postgresql/data
+      - ./postgres-init/hubs/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tiniping_network
+
+
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
@@ -50,6 +67,7 @@ services:
 volumes:
   logistics_db:
   user_db:
+  hub_db:
 
 networks:
   tiniping_network:

@@ -22,7 +22,7 @@ public class Order extends BaseEntity implements Serializable {
     private UUID orderId;
 
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private Long quantity;
 
     @Column(name = "supplier_vendor_id", nullable = false) // 공급 업체 ID (벤더 모듈에서 연동)
     private UUID supplierVendorId;
@@ -39,7 +39,7 @@ public class Order extends BaseEntity implements Serializable {
     private Delivery delivery;
 
     @Builder
-    public Order(Integer quantity, UUID supplierVendorId, UUID receiverVendorId, Product product, Delivery delivery) {
+    public Order(Long quantity, UUID supplierVendorId, UUID receiverVendorId, Product product, Delivery delivery) {
         this.quantity = quantity;
         this.supplierVendorId = supplierVendorId;
         this.receiverVendorId = receiverVendorId;
@@ -50,4 +50,15 @@ public class Order extends BaseEntity implements Serializable {
     public void setDeliveryId(Delivery delivery) {
         this.delivery = delivery;
     }
+
+    public void updateOrder(Long quantity, Product product, Delivery delivery) {
+        this.quantity = quantity;
+        this.product = product;
+        this.delivery = delivery;
+    }
+
+    public void markAsDeleted() {
+        this.isDelete = true;
+    }
+
 }

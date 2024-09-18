@@ -32,12 +32,14 @@ public class HubController {
 
     // Hub 수정
     // 마스터 관리자만 가능
-    @PutMapping("/{hubId}")
+    @PatchMapping("/{hubId}")
     public ResponseEntity<HubResponseDto> updateHub(
             @PathVariable UUID hubId,
-            @RequestBody HubRequestDto hubRequestDto,
-            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
-            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
+            @RequestBody HubRequestDto hubRequestDto) {
+//            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
+//            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
+        String user = "test-user";
+        String userRole = "ADMIN";
 
         // 서비스에서 Hub 수정 로직 호출
         HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, user, userRole);

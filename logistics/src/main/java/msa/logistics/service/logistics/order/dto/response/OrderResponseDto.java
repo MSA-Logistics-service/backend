@@ -8,30 +8,28 @@ import lombok.NoArgsConstructor;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
 import msa.logistics.service.logistics.order.domain.Order;
 import msa.logistics.service.logistics.product.domain.Product;
+import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderResponseDto {
 
     private UUID orderId;
-    private Integer quantity;
+    private Long quantity;
     private UUID supplierVendorId;
     private UUID receiverVendorId;
-    private Product product;
-    private Delivery delivery;
+    private UUID productId;
+    private UUID deliveryId;
 
-    // Order 엔티티 -> OrderResponseDto
-    public static OrderResponseDto from(Order order) {
-        return OrderResponseDto.builder()
-                .orderId(order.getOrderId())
-                .quantity(order.getQuantity())
-                .supplierVendorId(order.getSupplierVendorId())
-                .receiverVendorId(order.getReceiverVendorId())
-                .product(order.getProduct())
-                .delivery(order.getDelivery())
-                .build();
+    @Builder
+    public OrderResponseDto (Order order) {
+        this.orderId = order.getOrderId();
+        this.quantity = order.getQuantity();
+        this.supplierVendorId = order.getSupplierVendorId();
+        this.receiverVendorId = order.getReceiverVendorId();
+        this.productId = order.getProduct().getProductId();
+        this.deliveryId = order.getDelivery().getDeliveryId();
     }
 
 }

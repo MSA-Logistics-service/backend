@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
-import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
-import msa.logistics.service.logistics.delivery.dto.DeliveryCreateRequestDto;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
-import msa.logistics.service.logistics.delivery.repository.DeliveryRouteRepository;
 import msa.logistics.service.logistics.delivery.service.DeliveryService;
 import msa.logistics.service.logistics.order.domain.Order;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
+import msa.logistics.service.logistics.order.dto.request.OrderUpdateRequestDto;
 import msa.logistics.service.logistics.order.dto.response.OrderResponseDto;
 import msa.logistics.service.logistics.order.repository.OrderRepository;
 import msa.logistics.service.logistics.product.domain.Product;
@@ -18,7 +16,9 @@ import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +35,9 @@ public class OrderService {
         // 상품 확인
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        // 재고 감소
+        product.decreaseStock(requestDto.getQuantity());
 
         // 주문 엔티티 생성
         Order order = Order.builder()
@@ -58,7 +61,8 @@ public class OrderService {
             // 변경된 주문 저장
             orderRepository.save(order);
         } catch (Exception e) {
-            // 예외 발생 시 주문 생성 롤백
+            // 예외 발생 시 재고 복원 및 주문 롤백
+            product.increaseStock(requestDto.getQuantity());
             throw new CustomException(ErrorCode.DELIVERY_CREATION_FAILED);
         }
 
@@ -68,12 +72,48 @@ public class OrderService {
 
 
     // 주문 상세 조회
-//    @Transactional(readOnly = true)
-//    public OrderResponseDto getOrderById(UUID orderId) {
-//        Order order = orderRepository.findById(orderId)
-//                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
-//
-//        return OrderResponseDto.from(order);
-//    }
+    @Transactional(readOnly = true)
+    public OrderResponseDto getOrderById(UUID orderId) {
+        Order order = orderRepository.findByOrderIdAndIsDeleteFalse(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        return new OrderResponseDto(order);
+    }
+
+    // 주문 전체 조회
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepository.findAllByIsDeleteFalse().stream()
+                .map(OrderResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // 주문 수정
+    @Transactional
+    public void updateOrder(UUID orderId, OrderUpdateRequestDto requestDto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        Product product = productRepository.findById(requestDto.getProductId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        Delivery delivery = deliveryRepository.findById(requestDto.getDeliveryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DELIVERY_NOT_FOUND));
+
+        order.updateOrder(requestDto.getQuantity(), product, delivery);
+    }
+
+    // 주문 취소 (취소 시 재고 복원)
+    @Transactional
+    public void deleteOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
+
+        // 재고 복원
+        Product product = order.getProduct();
+        product.increaseStock(order.getQuantity());
+
+        order.markAsDeleted();
+    }
 
 }

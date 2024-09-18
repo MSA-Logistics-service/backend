@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderUpdateRequestDto {
 
-    private Integer quantity;
+    private Long quantity;
     private UUID productId;
     private UUID deliveryId;
 

@@ -15,7 +15,7 @@ public class HubResponseDto {
     private String hubAddress;
     private Double hubLatitude;
     private Double hubLongitude;
-    private Double hubRank;
+    private Integer hubRank;
 
     // 엔티티를 DTO로 변환하는 생성자
     public HubResponseDto(Hub hub) {
