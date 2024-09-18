@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.gateway.client.UserServiceClient;
 import msa.logistics.service.gateway.dto.UserDto;
+import msa.logistics.service.gateway.service.RedisService;
 import msa.logistics.service.gateway.util.JwtUtil;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,13 @@ import org.springframework.web.server.WebFilter;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-
+    private final RedisService redisService;
     private final UserServiceClient userServiceClient;
 
-    public SecurityConfig(JwtUtil jwtUtil, UserServiceClient userServiceClient) {
+    public SecurityConfig(JwtUtil jwtUtil, UserServiceClient userServiceClient, RedisService redisService) {
         this.jwtUtil = jwtUtil;
         this.userServiceClient = userServiceClient;
+        this.redisService = redisService;
     }
 
     @Bean
@@ -75,7 +77,7 @@ public class SecurityConfig {
 
                 String username = claims.getSubject();
 
-                UserDto userDto = Optional.ofNullable(userServiceClient.getUserByUsername(username))
+                UserDto userDto = Optional.ofNullable(redisService.getValueAsClass("user:" + username, UserDto.class))
                         .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
                 // 사용자 정보를 새로운 헤더에 추가
