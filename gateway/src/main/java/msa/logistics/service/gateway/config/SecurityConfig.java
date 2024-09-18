@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.gateway.client.UserServiceClient;
 import msa.logistics.service.gateway.dto.UserDto;
 import msa.logistics.service.gateway.util.JwtUtil;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
@@ -24,11 +26,17 @@ import org.springframework.web.server.WebFilter;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+
     private final UserServiceClient userServiceClient;
 
     public SecurityConfig(JwtUtil jwtUtil, UserServiceClient userServiceClient) {
         this.jwtUtil = jwtUtil;
         this.userServiceClient = userServiceClient;
+    }
+
+    @Bean
+    public HttpMessageConverters messageConverters() {
+        return new HttpMessageConverters(new MappingJackson2HttpMessageConverter());
     }
 
     @Bean
@@ -56,10 +64,11 @@ public class SecurityConfig {
 
             if (StringUtils.hasText(tokenValue)) {
                 // JWT 토큰 substring
-                tokenValue = jwtUtil.substringToken(tokenValue);
+                // tokenValue = jwtUtil.substringToken(tokenValue);
 
                 if (!jwtUtil.validateToken(tokenValue)) {
-                    return chain.filter(exchange);
+                    exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+                    return exchange.getResponse().setComplete();
                 }
 
                 Claims claims = jwtUtil.getUserInfoFromToken(tokenValue);
@@ -79,7 +88,8 @@ public class SecurityConfig {
                 ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
                 return chain.filter(modifiedExchange);
             }
-            return chain.filter(exchange);
+            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
         };
     }
 }
