@@ -28,15 +28,15 @@ public interface HubRepository extends JpaRepository<Hub, UUID> {
 
     // 가장 큰 hubRank 값을 가져오는 메서드
     @Query("SELECT COALESCE(MAX(h.hubRank), 0) FROM Hub h WHERE h.isDelete = false")
-    Double findMaxHubRank();
+    Integer findMaxHubRank();
 
     // 특정 hubRank 이상의 모든 hubRank를 1씩 증가시키는 메서드
     @Modifying
     @Query("UPDATE Hub h SET h.hubRank = h.hubRank + 1 WHERE h.hubRank >= :hubRank AND h.isDelete = false")
-    void incrementHubRankGreaterThanOrEqual(@Param("hubRank") Double hubRank);
+    void incrementHubRankGreaterThanOrEqual(@Param("hubRank") Integer hubRank);
 
     // 특정 hubRank 이상의 모든 hubRank를 1씩 감소시키는 메서드 (삭제 시 사용)
     @Modifying
     @Query("UPDATE Hub h SET h.hubRank = h.hubRank - 1 WHERE h.hubRank > :hubRank AND h.isDelete = false")
-    void decrementHubRankGreaterThan(@Param("hubRank") Double hubRank);
+    void decrementHubRankGreaterThan(@Param("hubRank") Integer hubRank);
 }

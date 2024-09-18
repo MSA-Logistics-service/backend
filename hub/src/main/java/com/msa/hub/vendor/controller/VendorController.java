@@ -35,7 +35,7 @@ public class VendorController {
 
 
     // Vendor 수정
-    @PutMapping("/{vendorId}")
+    @PatchMapping("/{vendorId}")
     public ResponseEntity<VendorResponseDto> updateVendor(
             @PathVariable UUID vendorId,
             @RequestBody VendorRequestDto vendorRequestDto,
