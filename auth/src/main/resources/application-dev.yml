@@ -16,3 +16,9 @@ management:
 service:
   jwt:
     secret-key: paieRY4DK8B5jo8NRHQRVo8Ljs2zJgWbEDjbJ3cTVKVac7oftXqVaFmoaC9ouoAp
+
+spring:
+  data:
+    redis:
+      host: localhost  # Redis 서버의 호스트명
+      port: 6379       # Redis 서버 포트
