@@ -57,3 +57,8 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+ai:
+  google:
+    api-key: "AIzaSyDfmYmCOroxT6Q_AJl6WQrAmw-pR9ld5cA"
+
