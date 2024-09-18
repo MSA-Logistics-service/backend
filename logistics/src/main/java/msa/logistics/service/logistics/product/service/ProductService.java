@@ -1,6 +1,9 @@
 package msa.logistics.service.logistics.product.service;
 
 import lombok.RequiredArgsConstructor;
+import msa.logistics.service.logistics.client.hub.HubService;
+import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
+import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
 import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.product.domain.Product;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,11 +24,20 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final HubService hubService;
+
 
     // 상품 생성
     @Transactional
     public UUID createProduct(ProductCreateRequestDto request) {
-        //TODO: 리팩토링 업체와 허브의 존재 여부 확인 로직 생략
+        // 업체 존재 여부 확인
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(request.getVendorId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
+
+        // 허브 존재 여부 확인
+        HubResponseDto hub = Optional.ofNullable(hubService.getHub(request.getHubId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.HUB_NOT_FOUND));
+
         Product product = Product.builder()
                 .productName(request.getProductName())
                 .stockQuantity(request.getStockQuantity())
@@ -48,6 +61,10 @@ public class ProductService {
     // 특정 업체의 상품 목록 조회
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getProductsByVendor(UUID vendorId) {
+        // 업체 존재 여부 확인
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(vendorId))
+                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
+
         List<Product> products = productRepository.findByVendorIdAndIsDeleteFalse(vendorId);
         return products.stream()
                 .map(ProductResponseDto::new)
