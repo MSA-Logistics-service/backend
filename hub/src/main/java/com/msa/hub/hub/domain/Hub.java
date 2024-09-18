@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Hub extends BaseEntity {
     @Id
     @GeneratedValue
-    @Column(name = "hub_id", columnDefinition = "BINARY(16)")
+    @Column(name = "hub_id", columnDefinition = "UUID")
     private UUID hubId;
 
     @Column(name = "hub_name", nullable = false)
@@ -31,10 +31,10 @@ public class Hub extends BaseEntity {
     private Double hubLongitude;
 
     @Column(name = "hub_rank", nullable = false)
-    private Double hubRank;
+    private Integer hubRank;
 
     // 생성자
-    public Hub(String hubName, String hubAddress, Double hubLatitude, Double hubLongitude, Double hubRank) {
+    public Hub(String hubName, String hubAddress, Double hubLatitude, Double hubLongitude, Integer hubRank) {
         this.hubName = hubName;
         this.hubAddress = hubAddress;
         this.hubLatitude = hubLatitude;

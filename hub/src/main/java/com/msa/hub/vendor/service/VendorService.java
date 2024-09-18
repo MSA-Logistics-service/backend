@@ -9,8 +9,10 @@ import com.msa.hub.vendor.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,10 +29,10 @@ public class VendorService {
     public VendorResponseDto registerVendor(VendorRequestDto vendorRequestDto) {
         // Hub가 존재하는지 확인
         Hub hub = hubRepository.findById(vendorRequestDto.getHubId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 Hub가 존재하지 않습니다."));
 
         // UserId는 Request에서 받아온 값 사용
-        Long userId = vendorRequestDto.getUserId();
+        Long userId = 1L;//vendorRequestDto.getUserId();
 
         // Vendor 엔티티 생성 후 저장
         Vendor vendor = new Vendor(

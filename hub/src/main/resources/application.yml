@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: hub
+  cloud:
+    circuitbreaker:
+      resilience4j:
+        enabled: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5436/hub
+    username: hub_db
+    password: hub_db
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+server:
+  port: 19092
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19095/eureka/
+    enabled: false

@@ -21,7 +21,7 @@ public class HubService {
     @Transactional
     public HubResponseDto registerHub(HubRequestDto hubRequestDto) {
         // hubRank가 0이거나 null이면 가장 큰 hubRank에 1을 더해 설정
-        Double hubRank = hubRequestDto.getHubRank();
+        Integer hubRank = hubRequestDto.getHubRank();
         if (hubRank == null || hubRank == 0) {
             hubRank = hubRepository.findMaxHubRank() + 1;
         } else {
@@ -45,6 +45,7 @@ public class HubService {
     }
 
     // Hub 수정
+    // Hub Path 에서 is_delete가  false 이고 rank 가 같거나 높은거 찾아서 전부 +1 해줘야함
     @Transactional
     public HubResponseDto updateHub(UUID hubId, HubRequestDto hubRequestDto, String user, String userRole) {
         // 해당 Hub가 DB에 존재하는지 확인
@@ -56,11 +57,8 @@ public class HubService {
             throw new IllegalArgumentException("해당 Hub를 수정할 권한이 없습니다.");
         }
 
-        // hubRank가 0이거나 null이면 가장 큰 hubRank에 1을 더해 설정
-        Double hubRank = hubRequestDto.getHubRank();
-        if (hubRank == null || hubRank == 0) {
-            hubRank = hubRepository.findMaxHubRank() + 1;
-        } else {
+        Integer hubRank = hubRequestDto.getHubRank();
+        if (hubRank > 0) {
             // hubRank가 0이 아닌 값이 들어오면, 해당 값 이상인 모든 hubRank를 1씩 증가시킴
             hubRepository.incrementHubRankGreaterThanOrEqual(hubRank);
         }
@@ -74,6 +72,7 @@ public class HubService {
     }
 
     // Hub 삭제 (is_delete = true 로 설정)
+    // Hub Path 에서 is_delete가  false 인걸 찾아서 있으면 삭제 못함
     @Transactional
     public void deleteHub(UUID hubId) {
         // 해당 Hub가 DB에 존재하는지 확인
@@ -81,7 +80,7 @@ public class HubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
 
         // 삭제 대상 hubRank 값 저장
-        Double hubRankToDelete = hub.getHubRank();
+        Integer hubRankToDelete = hub.getHubRank();
 
         // 소프트 삭제 처리 (isDelete = true)
         hub.delete(true);
