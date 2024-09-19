@@ -65,4 +65,11 @@ public class UserService {
         }
         return false;
     }
+
+    public List<UserResponseDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(UserResponseDto::convertToUserResponseDto)
+                .toList();
+    }
 }

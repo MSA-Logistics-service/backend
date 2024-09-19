@@ -1,5 +1,6 @@
 package msa.logistics.service.user.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.user.common.dto.ApiResponseDto;
@@ -9,6 +10,7 @@ import msa.logistics.service.user.dto.UserResponseDto;
 import msa.logistics.service.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +43,12 @@ public class UserController {
                                                                 @RequestHeader("X-User-Roles") String roles) {
         UserResponseDto userResponseDto = userService.getUserById(userId, username, roles);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "사용자 조회 성공", userResponseDto));
+    }
+
+    @PreAuthorize("hasAuthority('MASTER')")
+    @GetMapping()
+    ResponseEntity<ApiResponseDto<List<UserResponseDto>>> getAllUsers() {
+        List<UserResponseDto> userResponseDtos = userService.getAllUsers();
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "사용자 전체 조회 성공", userResponseDtos));
     }
 }
