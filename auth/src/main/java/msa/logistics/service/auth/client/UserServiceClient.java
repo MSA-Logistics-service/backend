@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "user")
 public interface UserServiceClient {
-    @GetMapping("/api/v1/users/{username}")
+    @GetMapping("/api/v1/users/user/{username}")
     UserDto getUserByUsername(@PathVariable("username") String username);
 
     @PostMapping("/api/v1/users/sign-up")

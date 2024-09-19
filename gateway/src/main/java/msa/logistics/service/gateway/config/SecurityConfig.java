@@ -88,6 +88,7 @@ public class SecurityConfig {
 
                 // 수정된 요청으로 필터 체인 계속 처리
                 ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
+
                 return chain.filter(modifiedExchange);
             }
             exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);

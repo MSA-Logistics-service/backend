@@ -45,8 +45,8 @@ public class AuthService {
         String jwt = jwtUtil.createToken(username, roles);
         jwtUtil.addJwtToHeader(jwt, response);
 
-        response.addHeader("X-User-Id", username);
-        response.addHeader("X-User-Role", rolesString);
+        response.addHeader("X-User-Name", username);
+        response.addHeader("X-User-Roles", rolesString);
     }
 
     public Boolean signup(SignUpDto signUpDto) {

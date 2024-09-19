@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,5 +61,19 @@ public class User extends BaseEntity implements Serializable {
                 .nickname(signUpDto.getNickname())
                 .role(UserRole.fromString(signUpDto.getRole()))
                 .build();
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void softDelete(String deletedBy) {
+        this.deletedBy = deletedBy;
+        this.deletedAt = LocalDateTime.now();
+        this.isDelete = true;
     }
 }
