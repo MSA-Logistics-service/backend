@@ -12,6 +12,7 @@ import msa.logistics.service.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +61,14 @@ public class UserController {
                                                                @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         UserResponseDto userResponseDto = userService.updateUser(userId, userUpdateRequestDto);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "사용자 수정 성공", userResponseDto));
+    }
+
+    @PreAuthorize("hasAuthority('MASTER')")
+    @DeleteMapping("/{user_id}")
+    ResponseEntity<ApiResponseDto<UserResponseDto>> deleteUser(@PathVariable("user_id") Long userId,
+                                                               @RequestHeader("X-User-Name") String username) {
+        UserResponseDto userResponseDto = userService.deleteUser(userId, username);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "사용자 삭제 성공", userResponseDto));
     }
 
 }

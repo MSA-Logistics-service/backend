@@ -88,4 +88,12 @@ public class UserService {
 
         return UserResponseDto.convertToUserResponseDto(user);
     }
+
+    public UserResponseDto deleteUser(Long userId, String username) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        user.softDelete(username);
+        return UserResponseDto.convertToUserResponseDto(user);
+    }
 }
