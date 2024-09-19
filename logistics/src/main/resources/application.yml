@@ -1,3 +1,4 @@
+# 서비스 이름 및 환경 분리
 spring:
   application:
     name: logistics
@@ -5,12 +6,8 @@ spring:
     circuitbreaker:
       resilience4j:
         enabled: true
-
-  datasource:
-    url: jdbc:postgresql://localhost:5433/logistics
-    username: logistics_db
-    password: logistics_db
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: dev
 
   jpa:
     hibernate:
@@ -23,10 +20,6 @@ spring:
 server:
   port: 19091
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:19090/eureka/
 
 resilience4j:
   circuitbreaker:
@@ -51,14 +44,6 @@ management:
     metrics:
       export:
         enabled: true
-  zipkin:
-    tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
-  tracing:
-    sampling:
-      probability: 1.0
 
-ai:
-  google:
-    api-key: "AIzaSyDfmYmCOroxT6Q_AJl6WQrAmw-pR9ld5cA"
+
 
