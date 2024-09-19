@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -75,6 +76,17 @@ public class GlobalExceptionHandler {
                 .build();
 
         log.error("AccessDeniedException is occurred.", e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthDeniedException(AuthorizationDeniedException e) {
+        ErrorResponse response = ErrorResponse.builder()
+                .errorCode(ErrorCode.FORBIDDEN)
+                .message("접근이 거부되었습니다. 권한이 없습니다.")
+                .build();
+
+        log.error("AuthorizationDeniedException is occurred.", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
