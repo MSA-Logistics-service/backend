@@ -69,6 +69,7 @@ public class ProductController {
      * 상품 삭제 (논리적 삭제)
      */
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 삭제 성공", null));
