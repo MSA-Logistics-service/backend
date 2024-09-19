@@ -5,6 +5,7 @@ import com.msa.hub.hub.domain.Hub;
 import com.msa.hub.vendor.dto.VendorRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table(name = "p_vendor")
+@SQLRestriction("is_delete is false")
 public class Vendor extends BaseEntity {
 
     @Id
