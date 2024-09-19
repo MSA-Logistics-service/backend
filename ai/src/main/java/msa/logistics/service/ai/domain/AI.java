@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,4 +36,16 @@ public class AI extends BaseEntity {
     private String aiResponse;
 
     private Long userId;
+
+    public static AI createAI(String request, String response) {
+        AI ai = new AI();
+        ai.aiRequest = request;
+        ai.aiResponse = response;
+        return ai;
+    }
+
+    public void softDelete(String deletedBy) {
+        this.deletedBy = deletedBy;
+        this.deletedAt = LocalDateTime.now();
+    }
 }

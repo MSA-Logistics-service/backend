@@ -4,6 +4,7 @@ spring:
     name: ai
   profiles:
     active: dev
+    include: ai
 
 
   jpa:
