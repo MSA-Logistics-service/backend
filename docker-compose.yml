@@ -29,7 +29,7 @@ services:
       POSTGRES_DB: user
     volumes:
       - user_db:/var/lib/postgresql/data
-      - ./postgres-init/logistics/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-init/user/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - tiniping_network
 
@@ -46,6 +46,22 @@ services:
     volumes:
       - hub_db:/var/lib/postgresql/data
       - ./postgres-init/hubs/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tiniping_network
+
+  ai-db:
+    container_name: ai_db
+    image: postgres
+    restart: always
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: ai_db
+      POSTGRES_PASSWORD: ai_db
+      POSTGRES_DB: ai
+    volumes:
+      - ai_db:/var/lib/postgresql/data
+      - ./postgres-init/ai/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - tiniping_network
 
