@@ -39,6 +39,7 @@ public class OrderController {
      * 주문 상세 조회
      */
     @GetMapping("/{order_id}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<OrderResponseDto>> getOrderById(@PathVariable("order_id") UUID orderId) {
         OrderResponseDto responseDto = orderService.getOrderById(orderId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 상세 조회 성공", responseDto));
@@ -48,6 +49,7 @@ public class OrderController {
      * 주문 전체 조회
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<List<OrderResponseDto>>> getAllOrders() {
         List<OrderResponseDto> responseDtoList = orderService.getAllOrders();
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "전체 주문 조회 성공", responseDtoList));
@@ -57,6 +59,7 @@ public class OrderController {
      * 주문 수정
      */
     @PutMapping("/{order_id}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> updateOrder(@PathVariable("order_id") UUID orderId,
                                                             @RequestBody OrderUpdateRequestDto requestDto) {
         orderService.updateOrder(orderId, requestDto);
@@ -67,6 +70,7 @@ public class OrderController {
      * 주문 삭제 (논리적 삭제)
      */
     @DeleteMapping("/{order_id}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> deleteOrder(@PathVariable("order_id") UUID orderId) {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 삭제 성공", null));
