@@ -35,7 +35,7 @@ public class OrderService {
 
     // 주문 생성 (배송 생성 API 호출)
     @Transactional
-    public UUID createOrder(OrderCreateRequestDto requestDto) {
+    public UUID createOrder(String username, OrderCreateRequestDto requestDto) {
         // 상품 확인
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
