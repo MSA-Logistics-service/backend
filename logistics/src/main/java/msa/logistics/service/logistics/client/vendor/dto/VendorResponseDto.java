@@ -16,6 +16,6 @@ public class VendorResponseDto {
     private String vendorName;
     private VendorType vendorType;
     private String vendorAddress;
-    private HubResponseDto hub;  // Hub 정보를 HubResponseDto로 반환
+    private UUID hubId;
     private Long userId;
 }

@@ -16,5 +16,4 @@ public class OrderCreateRequestDto {
     private UUID supplierVendorId;
     private UUID receiverVendorId;
     private UUID productId;
-    private UUID deliveryId;
 }
