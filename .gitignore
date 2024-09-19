@@ -4,3 +4,5 @@
 /msa.logistics.service.eureka/eureka/.gradle/
 /msa.logistics.service.eureka/eureka/build/
 /msa.logistics.service.eureka/eureka/build/classes/java/main/
+
+/ai/src/main/resources/application-ai.yml
