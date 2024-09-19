@@ -1,14 +1,11 @@
 package msa.logistics.service.ai.common.domain;
 
-import static lombok.AccessLevel.PROTECTED;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -16,7 +13,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
-@NoArgsConstructor(access = PROTECTED)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
@@ -44,5 +40,10 @@ public abstract class BaseEntity implements Serializable {
     protected String deletedBy;
 
     @Column(name = "is_delete")
-    protected Boolean isDelete;
+    protected Boolean isDelete = Boolean.FALSE; // 기본값 설정
+
+    // 생성자에서 기본값 설정
+    protected BaseEntity() {
+        this.isDelete = Boolean.FALSE;
+    }
 }
