@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/hubPath")
+@RequestMapping("/api/v1/hub-path")
 @RequiredArgsConstructor
 public class HubPathController {
 
@@ -91,11 +91,13 @@ public class HubPathController {
     // 시작 허브와 도착 허브 기준으로 경로 조회 (로그인 사용자 가능)
     @GetMapping("/list")
     public ResponseEntity<List<HubPathResponseDto>> getHubPathsByStartAndEnd(
-            @RequestParam(value = "startHub") UUID startHub,
-            @RequestParam(value = "endHub") UUID endHub) {
+            @RequestParam(value = "startHub", required = false) String startHub,
+            @RequestParam(value = "endHub", required = false) String endHub) {
+        UUID startHubUUID = convertStringToUUID(startHub);
+        UUID endHubUUID = convertStringToUUID(endHub);
 
         // 시작 및 종료 허브 경로 검색
-        List<HubPath> hubPaths = hubPathService.getStartEndPaths(startHub, endHub);
+        List<HubPath> hubPaths = hubPathService.getStartEndPaths(startHubUUID, endHubUUID);
 
         // HubPathResponseDto로 변환하여 반환
         List<HubPathResponseDto> responseDtos = hubPaths.stream()
