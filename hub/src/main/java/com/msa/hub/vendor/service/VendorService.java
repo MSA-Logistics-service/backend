@@ -86,8 +86,9 @@ public class VendorService {
     }
 
     // Vendor 상세 조회 (is_delete = false인 항목만)
-    public Optional<Vendor> getVendorDetail(UUID vendorId) {
-        return vendorRepository.findByVendorIdAndIsDeleteFalse(vendorId);
+    public Optional<VendorResponseDto> getVendorDetail(UUID vendorId) {
+        return vendorRepository.findByVendorIdAndIsDeleteFalse(vendorId)
+                .map(VendorResponseDto::new);
     }
 
     // 모든 Vendor 조회 (is_delete = false인 항목만)

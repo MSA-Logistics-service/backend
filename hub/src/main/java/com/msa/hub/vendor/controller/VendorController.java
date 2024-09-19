@@ -25,7 +25,7 @@ public class VendorController {
     //- **허브 관리자**: 자신의 허브에 소속된 업체만 관리 가능
     //- **허브 업체**: 자신의 업체만 수정 가능, 다른 업체의 읽기와 검색만 가능
 
-    // 허브 등록
+    // Vendor 등록
     @PostMapping
     public ResponseEntity<VendorResponseDto> registerVendor(@RequestBody VendorRequestDto vendorRequestDto) {
         // Hub와 UserId는 서비스 계층에서 조회해서 사용
@@ -36,8 +36,8 @@ public class VendorController {
 
     // Vendor 수정
     @PatchMapping("/{vendorId}")
-    public ResponseEntity<Vendor> getVenderDetail(@PathVariable UUID vendorId) {
-        Optional<Vendor> vendor = vendorService.getVendorDetail(vendorId);
+    public ResponseEntity<VendorResponseDto> getVenderDetail(@PathVariable UUID vendorId) {
+        Optional<VendorResponseDto> vendor = vendorService.getVendorDetail(vendorId);
         return vendor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -50,8 +50,8 @@ public class VendorController {
 
     // Vendor 상세 조회
     @GetMapping("/{vendorId}")
-    public ResponseEntity<Vendor> getVendorDetail(@PathVariable UUID vendorId) {
-        Optional<Vendor> vendor = vendorService.getVendorDetail(vendorId);
+    public ResponseEntity<VendorResponseDto> getVendorDetail(@PathVariable UUID vendorId) {
+        Optional<VendorResponseDto> vendor = vendorService.getVendorDetail(vendorId);
         return vendor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
