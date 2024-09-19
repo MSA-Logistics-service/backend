@@ -39,7 +39,8 @@ public class SecurityConfig {
         // 인증이 필요 없는 경로 설정
         http.authorizeHttpRequests(authorize ->
                 authorize
-                        .anyRequest().permitAll()  // 나머지 요청은 인증 필요
+                        .requestMatchers("/actuator/prometheus").permitAll()
+                        .anyRequest().authenticated()  // 나머지 요청은 인증 필요
         );
 
         // 필터 관리
