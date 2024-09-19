@@ -52,7 +52,7 @@ public class HubPathService {
 
     // HubPath 수정
     @Transactional
-    public HubPathResponseDto updateHubPath(UUID hubPathId, HubPathRequestDto hubPathRequestDto, String user, String userRole) {
+    public HubPathResponseDto updateHubPath(UUID hubPathId, HubPathRequestDto hubPathRequestDto, String user) {
         // 기존 HubPath 조회
         HubPath hubPath = getHubPathById(hubPathId);
 
@@ -125,6 +125,7 @@ public class HubPathService {
         HubPath currentPath = hubPathRepository.findByStartHub_HubId(startHubId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid start hub ID"));
 
+        // 시작허브와 end허브의 rank비교 시작허브의 rank가 작으면 지금그대로 하고 그렇지 않으면 반대 로직 생성해야함.
         // 경로 탐색 시작
         findPathsRecursively(currentPath, endHubId, hubPaths);
 
@@ -141,13 +142,13 @@ public class HubPathService {
             return; // 도착 허브에 도달했으므로 탐색 종료
         }
 
-        // 다음 경로들을 재귀적으로 탐색
-        for (String nextPathId : currentPath.getOtherHubPaths()) {
-            // nextPathId를 사용해 HubPath 엔티티를 조회
-            HubPath nextPath = hubPathRepository.findById(UUID.fromString(nextPathId))
-                    .orElse(null); // HubPath가 없을 경우 null 반환
+        // 현재 경로의 마감 허브를 시작 허브로 가지는 다른 경로를 탐색
+        Optional<HubPath> nextPathOpt = hubPathRepository.findByStartHub_HubId(currentPath.getEndHub().getHubId());
 
-            if (nextPath != null && !hubPaths.contains(nextPath)) { // 이미 방문한 경로는 제외
+        // nextPath가 존재하고, 이미 방문하지 않은 경로일 경우에만 재귀적으로 탐색
+        if (nextPathOpt.isPresent()) {
+            HubPath nextPath = nextPathOpt.get();
+            if (!hubPaths.contains(nextPath)) {
                 findPathsRecursively(nextPath, endHubId, hubPaths);
             }
         }

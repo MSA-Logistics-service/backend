@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,14 +34,14 @@ public class HubController {
     // Hub 수정
     // 마스터 관리자만 가능
     @PatchMapping("/{hubId}")
+    @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<HubResponseDto> updateHub(
             @PathVariable UUID hubId,
             @RequestBody HubRequestDto hubRequestDto,
-            @RequestHeader("X-User-Name") String username,         // 헤더에서 사용자 ID 받기
-            @RequestHeader("X-User-Roles") String userRole) { // 헤더에서 사용자 역할 받기
+            @RequestHeader("X-User-Name") String username) { // 헤더에서 사용자 역할 받기
 
         // 서비스에서 Hub 수정 로직 호출
-        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, username, userRole);
+        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, username);
 
         return ResponseEntity.ok(updatedHub);
     }

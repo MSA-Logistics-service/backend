@@ -47,15 +47,10 @@ public class HubService {
     // Hub 수정
     // Hub Path 에서 is_delete가  false 이고 rank 가 같거나 높은거 찾아서 전부 +1 해줘야함
     @Transactional
-    public HubResponseDto updateHub(UUID hubId, HubRequestDto hubRequestDto, String user, String userRole) {
+    public HubResponseDto updateHub(UUID hubId, HubRequestDto hubRequestDto, String user) {
         // 해당 Hub가 DB에 존재하는지 확인
         Hub hub = hubRepository.findById(hubId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
-
-        // 관리자만 수정 가능 (예시로 userRole을 검사)
-        if (!userRole.equals("MASTER")) {
-            throw new IllegalArgumentException("해당 Hub를 수정할 권한이 없습니다.");
-        }
 
         Integer hubRank = hubRequestDto.getHubRank();
         if (hubRank != null && hubRank > 0) {
