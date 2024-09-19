@@ -58,6 +58,7 @@ public class ProductController {
      * 상품 수정
      */
     @PutMapping("/{productId}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> updateProduct(@PathVariable UUID productId,
                                                               @Valid @RequestBody ProductUpdateRequestDto request) {
         productService.updateProduct(productId, request);
