@@ -53,7 +53,7 @@ public class HubService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
 
         // 관리자만 수정 가능 (예시로 userRole을 검사)
-        if (!userRole.equals("ADMIN")) {
+        if (!userRole.equals("MASTER")) {
             throw new IllegalArgumentException("해당 Hub를 수정할 권한이 없습니다.");
         }
 

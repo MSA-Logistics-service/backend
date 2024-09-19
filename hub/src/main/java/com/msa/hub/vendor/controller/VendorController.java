@@ -38,9 +38,8 @@ public class VendorController {
     @PatchMapping("/{vendorId}")
     public ResponseEntity<VendorResponseDto> updateVendor(
             @PathVariable String  vendorId,
-            @RequestBody VendorRequestDto vendorRequestDto) {
-        //    @RequestParam String userRole) {
-        String userRole = "ADMIN";
+            @RequestBody VendorRequestDto vendorRequestDto,
+            @RequestHeader("X-User-Roles") String userRole) {
         UUID uuidVendorId = UUID.fromString(vendorId);
         VendorResponseDto updatedVendor = vendorService.updateVendor(uuidVendorId, vendorRequestDto, userRole);
         return ResponseEntity.ok(updatedVendor);

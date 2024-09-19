@@ -35,14 +35,12 @@ public class HubController {
     @PatchMapping("/{hubId}")
     public ResponseEntity<HubResponseDto> updateHub(
             @PathVariable UUID hubId,
-            @RequestBody HubRequestDto hubRequestDto) {
-//            @RequestHeader("X-User-Id") String user,         // 헤더에서 사용자 ID 받기
-//            @RequestHeader("X-User-Role") String userRole) { // 헤더에서 사용자 역할 받기
-        String user = "test-user";
-        String userRole = "ADMIN";
+            @RequestBody HubRequestDto hubRequestDto,
+            @RequestHeader("X-User-Name") String username,         // 헤더에서 사용자 ID 받기
+            @RequestHeader("X-User-Roles") String userRole) { // 헤더에서 사용자 역할 받기
 
         // 서비스에서 Hub 수정 로직 호출
-        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, user, userRole);
+        HubResponseDto updatedHub = hubService.updateHub(hubId, hubRequestDto, username, userRole);
 
         return ResponseEntity.ok(updatedHub);
     }

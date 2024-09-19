@@ -34,10 +34,10 @@ public class HubPathController {
     @PatchMapping("/{hubPathId}")
     public ResponseEntity<HubPathResponseDto> updateHubPath(
             @PathVariable UUID hubPathId,
-            @RequestBody HubPathRequestDto hubPathRequestDto) {
-        String user = "test-user";
-        String userRole = "ADMIN";
-        HubPathResponseDto updatedHubPath = hubPathService.updateHubPath(hubPathId, hubPathRequestDto, user, userRole);
+            @RequestBody HubPathRequestDto hubPathRequestDto,
+            @RequestHeader("X-User-Name") String username,         // 헤더에서 사용자 ID 받기
+            @RequestHeader("X-User-Roles") String userRole) { // 헤더에서 사용자 역할 받기
+        HubPathResponseDto updatedHubPath = hubPathService.updateHubPath(hubPathId, hubPathRequestDto, username, userRole);
         return ResponseEntity.ok(updatedHubPath);
     }
 

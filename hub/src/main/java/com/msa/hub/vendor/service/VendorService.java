@@ -54,9 +54,9 @@ public class VendorService {
     @Transactional
     public VendorResponseDto updateVendor(UUID vendorId, VendorRequestDto vendorRequestDto, String userRole) {
         // 관리자 권한 확인
-//        if (!userRole.equals("ADMIN")) {
-//            throw new IllegalArgumentException("해당 Vendor를 수정할 권한이 없습니다.");
-//        }
+        if (!userRole.equals("MASTER")) {
+            throw new IllegalArgumentException("해당 Vendor를 수정할 권한이 없습니다.");
+        }
 
         // Vendor가 존재하는지 확인
         Vendor vendor = vendorRepository.findById(vendorId)
