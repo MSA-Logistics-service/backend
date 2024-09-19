@@ -24,7 +24,7 @@ spring:
         - id: logistics
           uri: lb://logistics
           predicates:
-            - Path=/api/v1/shipping-managers/**, /api/v1/products/**, /api/v1/orders/**, /api/v1/deliveries/**, /api/v1/delivery-routes/**
+            - Path=/api/v1/shipping-managers/**, /api/v1/products/**, /api/v1/orders/**, /api/v1/deliveries/**, /api/v1/delivery-routes/**, /ai-content
         - id: hub
           uri: lb://hub
           predicates:

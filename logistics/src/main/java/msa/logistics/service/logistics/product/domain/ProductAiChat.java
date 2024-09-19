@@ -20,8 +20,8 @@ public class ProductAiChat extends BaseEntity implements Serializable {
     @Column(name = "product_ai_chat_id")
     private UUID productAiChatId;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @Column(name = "username")
+    private String userName;
 
     @Column(length = 2000) // 500자로 길이를 늘림
     private String response;

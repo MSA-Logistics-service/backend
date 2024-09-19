@@ -1,6 +1,8 @@
 package msa.logistics.service.logistics.order.service;
 
 import lombok.RequiredArgsConstructor;
+import msa.logistics.service.logistics.client.hub.HubService;
+import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
 import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final DeliveryRepository deliveryRepository;
     private final DeliveryService deliveryService;
+    private final HubService hubService;
 
     // 주문 생성 (배송 생성 API 호출)
     @Transactional
@@ -38,6 +42,10 @@ public class OrderService {
 
         // 재고 감소
         product.decreaseStock(requestDto.getQuantity());
+
+        // Vendor 확인 (FeignClient 호출)
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(requestDto.getReceiverVendorId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
         // 주문 엔티티 생성
         Order order = Order.builder()
