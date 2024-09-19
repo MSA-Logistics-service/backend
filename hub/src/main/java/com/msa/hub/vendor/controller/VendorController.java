@@ -37,15 +37,17 @@ public class VendorController {
     // Vendor 수정
     @PatchMapping("/{vendorId}")
     public ResponseEntity<VendorResponseDto> updateVendor(
-            @PathVariable UUID vendorId,
-            @RequestBody VendorRequestDto vendorRequestDto,
-            @RequestParam String userRole) {
-        VendorResponseDto updatedVendor = vendorService.updateVendor(vendorId, vendorRequestDto, userRole);
+            @PathVariable String  vendorId,
+            @RequestBody VendorRequestDto vendorRequestDto) {
+        //    @RequestParam String userRole) {
+        String userRole = "ADMIN";
+        UUID uuidVendorId = UUID.fromString(vendorId);
+        VendorResponseDto updatedVendor = vendorService.updateVendor(uuidVendorId, vendorRequestDto, userRole);
         return ResponseEntity.ok(updatedVendor);
     }
 
     // Vendor 삭제 (소프트 삭제)
-    @DeleteMapping("/delete/{vendorId}")
+    @PatchMapping("/delete/{vendorId}")
     public ResponseEntity<Void> deleteVendor(@PathVariable UUID vendorId) {
         vendorService.deleteVendor(vendorId);
         return ResponseEntity.noContent().build();
