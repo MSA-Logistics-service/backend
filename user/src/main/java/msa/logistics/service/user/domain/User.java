@@ -61,4 +61,12 @@ public class User extends BaseEntity implements Serializable {
                 .role(UserRole.fromString(signUpDto.getRole()))
                 .build();
     }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

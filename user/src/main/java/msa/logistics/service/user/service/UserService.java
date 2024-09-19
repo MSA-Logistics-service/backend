@@ -12,6 +12,7 @@ import msa.logistics.service.user.domain.UserRole;
 import msa.logistics.service.user.dto.SignUpDto;
 import msa.logistics.service.user.dto.UserDto;
 import msa.logistics.service.user.dto.UserResponseDto;
+import msa.logistics.service.user.dto.UserUpdateRequestDto;
 import msa.logistics.service.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +72,20 @@ public class UserService {
         return users.stream()
                 .map(UserResponseDto::convertToUserResponseDto)
                 .toList();
+    }
+
+    public UserResponseDto updateUser(Long userId, UserUpdateRequestDto userUpdateRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (!userUpdateRequestDto.getUsername().isEmpty()) {
+            user.updateUsername(userUpdateRequestDto.getUsername());
+        }
+
+        if (!userUpdateRequestDto.getNickname().isEmpty()) {
+            user.updateNickname(userUpdateRequestDto.getNickname());
+        }
+
+        return UserResponseDto.convertToUserResponseDto(user);
     }
 }
