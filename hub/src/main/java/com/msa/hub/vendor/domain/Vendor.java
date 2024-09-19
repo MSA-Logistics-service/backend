@@ -4,15 +4,19 @@ import com.msa.hub.common.entity.BaseEntity;
 import com.msa.hub.hub.domain.Hub;
 import com.msa.hub.vendor.dto.VendorRequestDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
+@Setter
+@Builder
 @Table(name = "p_vendor")
+@SQLRestriction("is_delete is false")
 public class Vendor extends BaseEntity {
 
     @Id

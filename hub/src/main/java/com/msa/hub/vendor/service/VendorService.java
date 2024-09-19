@@ -62,15 +62,12 @@ public class VendorService {
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Vendor가 존재하지 않습니다."));
 
-        // Hub가 존재하는지 확인 (필요 시 Hub도 변경할 수 있음)
-        Hub hub = hubRepository.findById(vendorRequestDto.getHubId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 Hub가 존재하지 않습니다."));
-
-        // Vendor 정보 업데이트
-        vendor.update(vendorRequestDto, hub);
+        vendor.setVendorName(vendorRequestDto.getVendorName());
+        vendor.setVendorType(vendorRequestDto.getVendorType());
+        vendor.setVendorAddress(vendor.getVendorAddress());
 
         // 업데이트된 Vendor를 DTO로 변환하여 반환
-        return new VendorResponseDto(vendor);
+        return VendorResponseDto.fromEntity(vendorRepository.save(vendor));
     }
 
 

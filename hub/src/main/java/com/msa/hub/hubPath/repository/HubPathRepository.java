@@ -27,10 +27,11 @@ public interface HubPathRepository extends JpaRepository<HubPath, UUID> {
 
     // 특정 시작 허브와 도착 허브를 가지는 경로 조회
     @Query("SELECT h FROM HubPath h WHERE h.isDelete = false " )
-    Page<HubPath> findByFilters(String startHubId, String endHubId, Pageable pageable);
+    Page<HubPath> findByFilters(UUID startHubId, UUID endHubId, Pageable pageable);
 
     // 도착 허브와 현재 허브를 도착 허브로 가지고 있는 경로 조회
     Optional<HubPath> findByStartHub_HubId(UUID  startHubId);
 
+    Optional<HubPath> findByHubRank(Integer hubRank);
 
 }

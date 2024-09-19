@@ -49,7 +49,7 @@ public class HubController {
 
     // Hub 삭제 (소프트 삭제)
     // 마스터 관리자만 가능
-    @DeleteMapping("/delete/{hubId}")
+    @PatchMapping("/delete/{hubId}")
     public ResponseEntity<Void> deleteHub(@PathVariable UUID hubId) {
         hubService.deleteHub(hubId);
         return ResponseEntity.noContent().build();

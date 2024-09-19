@@ -23,12 +23,15 @@ public class HubPathResponseDto {
     public HubPathResponseDto(HubPath hubPath) {
         this.hubPathId = hubPath.getHubPathId();
         this.hubPathDuration = hubPath.getHubPathDuration();
-        // HubPath 엔티티에서 otherHubPaths의 UUID 리스트로 변환
+
+        // otherHubPaths의 문자열 ID 리스트를 UUID 리스트로 변환
         this.otherHubPathId = hubPath.getOtherHubPaths().stream()
-                .map(HubPath::getHubPathId)
+                .map(UUID::fromString) // 문자열을 UUID로 변환
                 .collect(Collectors.toList());
+
         this.startHubId = hubPath.getStartHub().getHubId();
         this.endHubId = hubPath.getEndHub().getHubId();
         this.hubRank = hubPath.getHubRank();
     }
+
 }
