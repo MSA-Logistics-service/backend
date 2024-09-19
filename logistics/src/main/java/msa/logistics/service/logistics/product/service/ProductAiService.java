@@ -38,7 +38,7 @@ public class ProductAiService {
     }
 
     @Transactional
-    public String createAiResponse(String prompt) {
+    public String createAiResponse(String username, String prompt) {
 
         UUID ai_id = UUID.randomUUID();
 
@@ -47,6 +47,7 @@ public class ProductAiService {
         ProductAiChat ai = ProductAiChat.builder()
                 .productAiChatId(ai_id)
                 .response(response)
+                .userName(username)
                 .build();
         aiRepository.save(ai);
 
