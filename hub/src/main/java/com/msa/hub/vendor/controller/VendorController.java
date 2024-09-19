@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/vendor")
+@RequestMapping("/api/v1/vendors")
 @RequiredArgsConstructor
 public class VendorController {
 
@@ -36,13 +36,9 @@ public class VendorController {
 
     // Vendor 수정
     @PatchMapping("/{vendorId}")
-    public ResponseEntity<VendorResponseDto> updateVendor(
-            @PathVariable String  vendorId,
-            @RequestBody VendorRequestDto vendorRequestDto,
-            @RequestHeader("X-User-Roles") String userRole) {
-        UUID uuidVendorId = UUID.fromString(vendorId);
-        VendorResponseDto updatedVendor = vendorService.updateVendor(uuidVendorId, vendorRequestDto, userRole);
-        return ResponseEntity.ok(updatedVendor);
+    public ResponseEntity<Vendor> getVenderDetail(@PathVariable UUID vendorId) {
+        Optional<Vendor> vendor = vendorService.getVendorDetail(vendorId);
+        return vendor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Vendor 삭제 (소프트 삭제)
