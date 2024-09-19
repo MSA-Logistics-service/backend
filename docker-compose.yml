@@ -85,6 +85,7 @@ volumes:
   logistics_db:
   user_db:
   hub_db:
+  ai_db:
 
 networks:
   tiniping_network:
