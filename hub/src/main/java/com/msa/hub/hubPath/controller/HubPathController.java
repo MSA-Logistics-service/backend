@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,13 +32,13 @@ public class HubPathController {
     }
 
     // HubPath 수정 (마스터 관리자만 가능)
+    @PreAuthorize("hasAuthority('MASTER')")
     @PatchMapping("/{hubPathId}")
     public ResponseEntity<HubPathResponseDto> updateHubPath(
             @PathVariable UUID hubPathId,
             @RequestBody HubPathRequestDto hubPathRequestDto,
-            @RequestHeader("X-User-Name") String username,         // 헤더에서 사용자 ID 받기
-            @RequestHeader("X-User-Roles") String userRole) { // 헤더에서 사용자 역할 받기
-        HubPathResponseDto updatedHubPath = hubPathService.updateHubPath(hubPathId, hubPathRequestDto, username, userRole);
+            @RequestHeader("X-User-Name") String username) { // 헤더에서 사용자 역할 받기
+        HubPathResponseDto updatedHubPath = hubPathService.updateHubPath(hubPathId, hubPathRequestDto, username);
         return ResponseEntity.ok(updatedHubPath);
     }
 
