@@ -9,6 +9,7 @@ import msa.logistics.service.logistics.product.dto.response.ProductResponseDto;
 import msa.logistics.service.logistics.product.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,8 +27,10 @@ public class ProductController {
      * 상품 생성
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<UUID>> createProduct(@Valid @RequestBody ProductCreateRequestDto request) {
-        UUID productId = productService.createProduct(request);
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
+    public ResponseEntity<ApiResponseDto<UUID>> createProduct(@RequestHeader(value = "X-USER-NAME") String username,
+                                                              @Valid @RequestBody ProductCreateRequestDto request) {
+        UUID productId = productService.createProduct(username, request);
         return ResponseEntity
                 .created(URI.create("/api/v1/products/" + productId))
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "상품 생성 성공", productId));
@@ -55,6 +58,7 @@ public class ProductController {
      * 상품 수정
      */
     @PutMapping("/{productId}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> updateProduct(@PathVariable UUID productId,
                                                               @Valid @RequestBody ProductUpdateRequestDto request) {
         productService.updateProduct(productId, request);
@@ -65,6 +69,7 @@ public class ProductController {
      * 상품 삭제 (논리적 삭제)
      */
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> deleteProduct(@PathVariable UUID productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상품 삭제 성공", null));

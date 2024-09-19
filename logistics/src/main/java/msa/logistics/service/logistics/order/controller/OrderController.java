@@ -8,6 +8,7 @@ import msa.logistics.service.logistics.order.dto.response.OrderResponseDto;
 import msa.logistics.service.logistics.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,8 +26,10 @@ public class OrderController {
      * 주문 생성
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<UUID>> createOrder(@RequestBody OrderCreateRequestDto requestDto) {
-        UUID orderId = orderService.createOrder(requestDto);
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
+    public ResponseEntity<ApiResponseDto<UUID>> createOrder(@RequestHeader(value = "X-USER-NAME") String username,
+                                                            @RequestBody OrderCreateRequestDto requestDto) {
+        UUID orderId = orderService.createOrder(username, requestDto);
         return ResponseEntity
                 .created(URI.create("/api/v1/orders/" + orderId))
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "주문 생성 성공", orderId));

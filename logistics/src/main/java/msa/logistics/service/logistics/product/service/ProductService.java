@@ -29,7 +29,7 @@ public class ProductService {
 
     // 상품 생성
     @Transactional
-    public UUID createProduct(ProductCreateRequestDto request) {
+    public UUID createProduct(String username, ProductCreateRequestDto request) {
         // 업체 존재 여부 확인
         VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(request.getVendorId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
