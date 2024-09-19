@@ -59,6 +59,7 @@ public class OrderController {
      * 주문 수정
      */
     @PutMapping("/{order_id}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> updateOrder(@PathVariable("order_id") UUID orderId,
                                                             @RequestBody OrderUpdateRequestDto requestDto) {
         orderService.updateOrder(orderId, requestDto);
@@ -69,6 +70,7 @@ public class OrderController {
      * 주문 삭제 (논리적 삭제)
      */
     @DeleteMapping("/{order_id}")
+    @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<Void>> deleteOrder(@PathVariable("order_id") UUID orderId) {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "주문 삭제 성공", null));
