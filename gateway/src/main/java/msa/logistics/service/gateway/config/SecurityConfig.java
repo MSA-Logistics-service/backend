@@ -56,9 +56,10 @@ public class SecurityConfig {
 
             log.info("check filter run");
 
-            // /auth/login 경로는 필터를 적용하지 않음
-            if (exchange.getRequest().getURI().getPath().equals("/api/v1/auth/sign-up")
-                    || exchange.getRequest().getURI().getPath().equals("/api/v1/auth/sign-in")) {
+            // /auth/login/prometheus 경로는 필터를 적용하지 않음
+            String path = exchange.getRequest().getURI().getPath();
+            if (path.equals("/api/v1/auth/sign-up") || path.equals("/api/v1/auth/sign-in")
+                    || path.equals("/actuator/prometheus")) {
                 return chain.filter(exchange);
             }
 

@@ -65,6 +65,26 @@ services:
     ports:
       - "6379:6379"
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - tiniping_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - "3010:3000"
+    networks:
+      - tiniping_network
+
 volumes:
   logistics_db:
   user_db:
