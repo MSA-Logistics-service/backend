@@ -1,38 +1,20 @@
-![](./t.jpg)
-# 캐치 T니핑 MSA 물류 프로젝트
-
+# MSA 물류 프로젝트
+- MSA 기반 물류 관리 및 배송 플랫폼
 
 ## 🐹 개발 환경
 
-| 분류         | 상세                                  |
+| 분류       |  상세                                  |
 |------------|:------------------------------------|
-| IDE        | IntelliJ                            |
-| Language   | Java 17                             |
-| Framework  | Spring Boot 3.3.3                   |
-| Repository | PostgreSQL 16.4, H2 In-memory(Test) |
-| Build Tool | Gradle 8.8                          |
-| Infra      | Docker, Github Actions              |
+| IDE        | `IntelliJ`                           |
+| Language   | `Java 17`                           |
+| Framework  | `Spring Boot 3.3.3`, `Spring Security` |
+| Database   | `PostgreSQL`, `Redis` |
+|ORM         | `JPA` |
+| Build Tool | `Gradle`                          |
+| Infra      | `Docker`, `Docker-Compose`        |
+|Monitoring  |`zipkin`, `prometheus`, `Grafana` |
+|Version control|`git`, `github`|
 
-## 👻 상세 개발 환경
-
-### Dependencies
-
-- Spring WebMVC
-- Spring Validation
-- Spring Security
-- Spring Data Jpa
-- Spring Data Redis
-- jjwt 0.12.5
-- QueryDSL 5.0.0
-- mapStruct 1.5.5.Final
-- Lombok
-- JUnit
-- Swagger 2.6.0
-- Jacoco
-
-## 🐰 프로젝트 상세
-
-> MSA 기반 물류 관리 및 배송플랫폼
 
 ## 🐳 ERD
 
@@ -40,12 +22,23 @@
 
 ## 🐙 API docs
 
-- https://www.notion.so/teamsparta/API-f7da2a7b7fe64f9c9eeb8616fd15e9f4
+- [[보러 가기]](https://www.notion.so/teamsparta/API-f7da2a7b7fe64f9c9eeb8616fd15e9f4) (스웨거 삽입 예정)
 
 ## 🐬 인프라 구조
 ![인프라 설계서.png](infra.png)
 
-# 🔢 Port 번호
+## 📂 패키지 구조
+
+| Service	             | Description	    | Authorization	 | Port   |
+|:---------------------|:----------------|:---------------|:-------|
+| [`API Gateway`]      | 요청 인증 및 라우팅     | jwt 토큰 인증      | `8080` |
+| [`User`]             | 사용자 관련 작업 관리)   | jwt 토큰 발급      | `8081` |
+| [`Lecture`]          | 강의 도메인 작업 관리    |                | `8082` |
+| [`Coupon`]           | 쿠폰 도메인 작업 관리    |                | `8083` |
+| [`Payment`]          | 결제 도메인 작업 관리    |                | `8084` |
+| [`Lecture Resource`] | 강의 자료 도메인 작업 관리 |                | `8085` |
+| [`Order`]            | 주문 도메인 작업 관리    |                | `8086` |
+
 
 ## 순서
 - Logistics → Hub → Slack & AI → User
@@ -57,35 +50,16 @@
 - Slack & AI → 5435
 - User → 5436
 
-## Eureka port 번호
-- Eureka → 19090
-- Logistics → 19091
-- Hub → 19092
-- Slack & AI → 19093
-- User → 19094
-- gateway → 19095
-- auth -> 19096
 
-## Prometheus port 번호
-- 9090부터 시작
-
-## Grafana port 번호
-- 3000부터 시작
-
-## Redis port 번호
-- 6379부터 시작
-
-# 담당 파트
+## 담당 파트
 
 | 담당   | 파트                                               |
 |-------|:-------------------------------------------------|
-| 곽솔래   | 업체 + 허브                                          |
-| 이경진   | 상품 + 주문                                          |
-| 최준    | 유레카 + 게이트웨이 + Auth + Config(?) + 유저 + Slack + AI |
+| 곽솔래   | 업체, 허브                                          |
+| 이경진   | 상품, 상품 AI, 주문, 분산추적                                        |
+| 최준    | 유레카, 게이트웨이, Auth 및 유저 + Slack + AI |
 | 노민경   | 배송 (배송, 배송 경로 기록)                                |
 | 공통    | 프로메테우스, 그라파나, Zipkin                             |
-| Infra | EC2, Docker, Github Actions                      |
-
 
 # 🌊흐름 및 엔티티
 
