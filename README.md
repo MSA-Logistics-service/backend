@@ -59,7 +59,7 @@
 
 ## 🧩 ERD 및 테이블 명세서
 
-![./대규모 AI 시스템 설계.png](./systems design.png)
+![image](https://github.com/user-attachments/assets/8895e30c-8353-4d7e-95ef-706cb5728605)
 - [[테이블 명세서 보러가기]](https://www.notion.so/teamsparta/fa7f938fb7554cf884904d99c95c8ca5)
 
 <br>
