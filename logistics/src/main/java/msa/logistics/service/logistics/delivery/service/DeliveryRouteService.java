@@ -5,15 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import msa.logistics.service.logistics.client.hub.HubService;
 import msa.logistics.service.logistics.client.hub.dto.HubPathResponseDto;
+import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
 import msa.logistics.service.logistics.common.exception.CustomException;
 import msa.logistics.service.logistics.common.exception.ErrorCode;
 import msa.logistics.service.logistics.delivery.domain.Delivery;
 import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
 import msa.logistics.service.logistics.delivery.dto.request.DeliveryRouteEditRequestDto;
-import msa.logistics.service.logistics.delivery.dto.HubPathData;
 import msa.logistics.service.logistics.delivery.dto.response.DeliveryRouteResponseDto;
 //import msa.logistics.service.logistics.delivery.naver.NaverApiService;
+import msa.logistics.service.logistics.delivery.naver.NaverApiService;
 import msa.logistics.service.logistics.delivery.naver.NaverDto;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRouteRepository;
@@ -35,70 +36,64 @@ public class DeliveryRouteService {
     private final DeliveryRepository deliveryRepository;
     private final DeliveryRouteRepository deliveryRouteRepository;
     private final HubService hubService;
-//    private final NaverApiService naverApiService;
+    private final NaverApiService naverApiService;
 
 
-//    // 하드코딩된 데이터를 사용한 createDeliveryRoute 메서드
-//    @Transactional
-//    public void createDeliveryRoute(Delivery delivery, UUID deliveryId,username,roles) {
-//
-//
-////        // 예시 사용
-////        String start = "127.1059968,37.3597093";// 출발 허브의 위도, 경도
-////        String end = "129.0764276,35.1795108"; // 도착 허브의 위도, 경도
-////        //startHub 위도,경도  destination 위도,경도 받아서 naver 서비스 전달
-////
-////        NaverDto response = naverApiService.getDirection(start,end);
-////
-////        // Naver API 응답 검증
-////        if (response == null || response.getDistance() == 0 || response.getDuration() == 0) {
-////            throw new IllegalStateException("Naver API로부터 유효한 경로 정보를 받아오지 못했습니다.");
-////        }
-////
-////        System.out.println("소요 시간: " + response.getDuration() + "초");
-////        System.out.println("거리: " + response.getDistance() + "미터");
-//
-//
-//
-//
-//        String startHubId = delivery.getStartHubId().toString();
-//        String destinationHubId = delivery.getDestinationHubId().toString();
-//        log.info("startHubId: " + startHubId + ", destinationHubId: " + destinationHubId);
-//
-//        List<HubPathData> hubPathData = Optional.ofNullable(
-//                        hubService.getHubPathsByStartAndEnd(startHubId,destinationHubId, username, roles))
-//                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
-//
-//        // 예시 데이터 설정: 하드 코딩된 경로 리스트 생성
-//        List<HubPathData> mockedRoutes = new ArrayList<>();
-//        mockedRoutes.add(new HubPathData(60, 100.0, startHubId, UUID.fromString("00000000-0000-0000-0000-000000000002"))); // 서울 -> 경기
-//        mockedRoutes.add(new HubPathData(90, 150.0, UUID.fromString("00000000-0000-0000-0000-000000000002"), UUID.fromString("00000000-0000-0000-0000-000000000003"))); // 경기 -> 충청
-//        mockedRoutes.add(new HubPathData(120, 200.0, UUID.fromString("00000000-0000-0000-0000-000000000003"), destinationHubId)); // 충청 -> 부산
-//
-//
-//
-//        int sequence = 1;
-//
-//        // HubPathData에서 DeliveryRoute 엔티티 생성 및 저장
-//        for (HubPathData hubPathData : mockedRoutes) {
-//            // DeliveryRoute 엔티티 생성 (이 엔티티는 실제로 JPA로 저장 가능한 엔티티여야 합니다)
-//            DeliveryRoute deliveryRoute = new DeliveryRoute();
-//            deliveryRoute.setDelivery(delivery);
-//            deliveryRoute.setSequence(sequence++);
-//            deliveryRoute.setStartHubId(hubPathData.getStartHubId());
-//            deliveryRoute.setDestinationHubId(hubPathData.getDestinationHubId());
-//            System.out.println("deliveryRoute: " + deliveryRoute);
-//            // 추가로 필요한 정보를 설정
-//            // deliveryRoute.setEstimatedDistance(hubPathData.getEstimatedDistance());
-//            // deliveryRoute.setDuration(hubPathData.getDuration());
-//
-//            // 실제 저장
-//            deliveryRouteRepository.save(deliveryRoute);
-//        }
-//
-//        System.out.println("Delivery ID: " + deliveryId + "에 대한 경로가 생성되었습니다.");
-//    }
+    @Transactional
+    public void createDeliveryRoute(Delivery delivery, UUID deliveryId, String username, String roles) {
 
+
+        String startHub = delivery.getStartHubId().toString();
+        String endHub = delivery.getDestinationHubId().toString();
+        log.info("startHubId: " + startHub + ", destinationHubId: " + endHub);
+
+        // 예시 사용
+
+
+        HubResponseDto startHub1 = hubService.getHub(delivery.getStartHubId(),username,roles);
+        String start = startHub1.getHubLongitude() + "," + startHub1.getHubLatitude();
+
+        HubResponseDto endHub1 = hubService.getHub(delivery.getDestinationHubId(),username,roles);
+        String end = endHub1.getHubLongitude()+ "," + endHub1.getHubLatitude();
+
+        log.info("start: " + start + ", end: " + end);
+        NaverDto response = naverApiService.getDirection(start,end);
+
+        // Naver API 응답 검증
+        if (response == null || response.getDistance() == 0 || response.getDuration() == 0) {
+            throw new IllegalStateException("Naver API로부터 유효한 경로 정보를 받아오지 못했습니다.");
+        }
+
+        System.out.println("소요 시간: " + response.getDuration() + "초");
+        System.out.println("거리: " + response.getDistance() + "미터");
+
+
+        List<HubPathResponseDto> hubPathData = Optional.ofNullable(
+                        hubService.getHubPathsByStartAndEnd(startHub, endHub, username, roles))
+                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
+
+
+        int sequence = 1;
+
+        // HubPathData에서 DeliveryRoute 엔티티 생성 및 저장
+        for (HubPathResponseDto hubPath : hubPathData) {
+            // DeliveryRoute 엔티티 생성 (이 엔티티는 실제로 JPA로 저장 가능한 엔티티여야 합니다)
+            DeliveryRoute deliveryRoute = new DeliveryRoute();
+            deliveryRoute.setDelivery(delivery);
+            deliveryRoute.setSequence(sequence++);
+            deliveryRoute.setStartHubId(hubPath.getStartHubId());
+            deliveryRoute.setDestinationHubId(hubPath.getEndHubId());
+            System.out.println("deliveryRoute: " + deliveryRoute);
+            // 추가로 필요한 정보를 설정
+            deliveryRoute.setActualDistance(response.getDistance());
+            deliveryRoute.setActualDuration((int) response.getDuration());
+
+            // 실제 저장
+            deliveryRouteRepository.save(deliveryRoute);
+        }
+
+        System.out.println("Delivery ID: " + deliveryId + "에 대한 경로가 생성되었습니다.");
+    }
     // 배송 상세 조회
     @Transactional
     public Optional<DeliveryRoute> getDeliveryRouteById(UUID deliveryRouteId) {
@@ -132,55 +127,5 @@ public class DeliveryRouteService {
         return deliveryRoutePage.map(DeliveryRouteResponseDto::fromEntity);
     }
 
-    @Transactional
-    public void createDeliveryRoute(Delivery delivery, UUID deliveryId, String username, String roles) {
 
-//        // 예시 사용
-//        String start = "127.1059968,37.3597093";// 출발 허브의 위도, 경도
-//        String end = "129.0764276,35.1795108"; // 도착 허브의 위도, 경도
-//        //startHub 위도,경도  destination 위도,경도 받아서 naver 서비스 전달
-//
-//        NaverDto response = naverApiService.getDirection(start,end);
-//
-//        // Naver API 응답 검증
-//        if (response == null || response.getDistance() == 0 || response.getDuration() == 0) {
-//            throw new IllegalStateException("Naver API로부터 유효한 경로 정보를 받아오지 못했습니다.");
-//        }
-//
-//        System.out.println("소요 시간: " + response.getDuration() + "초");
-//        System.out.println("거리: " + response.getDistance() + "미터");
-
-
-
-
-        String startHub = delivery.getStartHubId().toString();
-        String endHub = delivery.getDestinationHubId().toString();
-        log.info("startHubId: " + startHub + ", destinationHubId: " + endHub);
-
-        List<HubPathResponseDto> hubPathData = Optional.ofNullable(
-                        hubService.getHubPathsByStartAndEnd(startHub, endHub, username, roles))
-                .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
-
-
-        int sequence = 1;
-
-        // HubPathData에서 DeliveryRoute 엔티티 생성 및 저장
-        for (HubPathResponseDto hubPath : hubPathData) {
-            // DeliveryRoute 엔티티 생성 (이 엔티티는 실제로 JPA로 저장 가능한 엔티티여야 합니다)
-            DeliveryRoute deliveryRoute = new DeliveryRoute();
-            deliveryRoute.setDelivery(delivery);
-            deliveryRoute.setSequence(sequence++);
-            deliveryRoute.setStartHubId(hubPath.getStartHubId());
-            deliveryRoute.setDestinationHubId(hubPath.getEndHubId());
-            System.out.println("deliveryRoute: " + deliveryRoute);
-            // 추가로 필요한 정보를 설정
-            // deliveryRoute.setEstimatedDistance(hubPathData.getEstimatedDistance());
-            // deliveryRoute.setDuration(hubPathData.getDuration());
-
-            // 실제 저장
-            deliveryRouteRepository.save(deliveryRoute);
-        }
-
-        System.out.println("Delivery ID: " + deliveryId + "에 대한 경로가 생성되었습니다.");
-    }
 }
