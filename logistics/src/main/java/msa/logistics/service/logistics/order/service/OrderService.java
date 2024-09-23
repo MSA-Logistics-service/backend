@@ -1,5 +1,9 @@
 package msa.logistics.service.logistics.order.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.client.hub.HubService;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
@@ -18,11 +22,6 @@ import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -35,7 +34,7 @@ public class OrderService {
 
     // 주문 생성 (배송 생성 API 호출)
     @Transactional
-    public UUID createOrder(String username, OrderCreateRequestDto requestDto) {
+    public UUID createOrder(String username, String roles, OrderCreateRequestDto requestDto) {
         // 상품 확인
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -44,7 +43,8 @@ public class OrderService {
         product.decreaseStock(requestDto.getQuantity());
 
         // Vendor 확인 (FeignClient 호출)
-        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(requestDto.getReceiverVendorId()))
+        VendorResponseDto vendor = Optional.ofNullable(
+                        hubService.getVendor(requestDto.getReceiverVendorId(), username, roles))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
         // 주문 엔티티 생성
@@ -60,7 +60,7 @@ public class OrderService {
         UUID deliveryId;
         // 생성된 Order 객체를 DeliveryService에 전달하여 배송 생성
         try {
-            deliveryId = deliveryService.createDelivery(requestDto,order.getOrderId()); // 주문 객체를 전달
+            deliveryId = deliveryService.createDelivery(requestDto, order.getOrderId()); // 주문 객체를 전달
             Delivery delivery = deliveryService.getDeliveryById(deliveryId);
 
             // 배송 객체를 주문에 설정

@@ -1,16 +1,13 @@
 package msa.logistics.service.logistics.client.hub;
 
+import java.util.UUID;
 import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.UUID;
 
 public interface HubService {
 
-    HubResponseDto getHub(UUID hubId);
+    HubResponseDto getHub(UUID hubId, String username, String roles);
 
-    VendorResponseDto getVendor(UUID vendorId);
+    VendorResponseDto getVendor(UUID vendorId, String username, String roles);
 
 }

@@ -1,5 +1,8 @@
 package msa.logistics.service.logistics.order.controller;
 
+import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.common.dto.ApiResponseDto;
 import msa.logistics.service.logistics.order.dto.request.OrderCreateRequestDto;
@@ -9,11 +12,15 @@ import msa.logistics.service.logistics.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -27,9 +34,11 @@ public class OrderController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('VENDOR_MANAGER') or hasAuthority('MASTER')")
-    public ResponseEntity<ApiResponseDto<UUID>> createOrder(@RequestHeader(value = "X-USER-NAME") String username,
-                                                            @RequestBody OrderCreateRequestDto requestDto) {
-        UUID orderId = orderService.createOrder(username, requestDto);
+    public ResponseEntity<ApiResponseDto<UUID>> createOrder(
+            @RequestHeader(value = "X-User-Name") String username,
+            @RequestHeader(value = "X-User-Roles") String roles,
+            @RequestBody OrderCreateRequestDto requestDto) {
+        UUID orderId = orderService.createOrder(username, roles, requestDto);
         return ResponseEntity
                 .created(URI.create("/api/v1/orders/" + orderId))
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "주문 생성 성공", orderId));

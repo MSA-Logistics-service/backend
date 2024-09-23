@@ -1,5 +1,9 @@
 package msa.logistics.service.logistics.product.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import msa.logistics.service.logistics.client.hub.HubService;
 import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
@@ -14,11 +18,6 @@ import msa.logistics.service.logistics.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -29,13 +28,13 @@ public class ProductService {
 
     // 상품 생성
     @Transactional
-    public UUID createProduct(String username, ProductCreateRequestDto request) {
+    public UUID createProduct(String username, String roles, ProductCreateRequestDto request) {
         // 업체 존재 여부 확인
-        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(request.getVendorId()))
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(request.getVendorId(), username, roles))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
         // 허브 존재 여부 확인
-        HubResponseDto hub = Optional.ofNullable(hubService.getHub(request.getHubId()))
+        HubResponseDto hub = Optional.ofNullable(hubService.getHub(request.getHubId(), username, roles))
                 .orElseThrow(() -> new CustomException(ErrorCode.HUB_NOT_FOUND));
 
         Product product = Product.builder()
@@ -60,9 +59,9 @@ public class ProductService {
 
     // 특정 업체의 상품 목록 조회
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductsByVendor(UUID vendorId) {
+    public List<ProductResponseDto> getProductsByVendor(UUID vendorId, String username, String roles) {
         // 업체 존재 여부 확인
-        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(vendorId))
+        VendorResponseDto vendor = Optional.ofNullable(hubService.getVendor(vendorId, username, roles))
                 .orElseThrow(() -> new CustomException(ErrorCode.VENDOR_NOT_FOUND));
 
         List<Product> products = productRepository.findByVendorIdAndIsDeleteFalse(vendorId);

@@ -1,14 +1,13 @@
 package msa.logistics.service.logistics.client.fallback;
 
 import feign.FeignException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import msa.logistics.service.logistics.client.hub.HubClient;
 import msa.logistics.service.logistics.client.hub.dto.HubResponseDto;
 import msa.logistics.service.logistics.client.vendor.domain.VendorType;
 import msa.logistics.service.logistics.client.vendor.dto.VendorResponseDto;
-
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class HubFallback implements HubClient {
     private final Throwable cause;
 
     @Override
-    public HubResponseDto getHub(UUID hubId) {
+    public HubResponseDto getHub(UUID hubId, String username, String roles) {
         if (cause instanceof FeignException.Unauthorized) {
             log.error("Not Found Error");
         } else if (cause instanceof FeignException.NotFound) {
@@ -35,7 +34,7 @@ public class HubFallback implements HubClient {
     }
 
     @Override
-    public VendorResponseDto getVendor(UUID vendorId) {
+    public VendorResponseDto getVendor(UUID vendorId, String username, String roles) {
         if (cause instanceof FeignException.Unauthorized) {
             log.error("Not Found Error");
         } else if (cause instanceof FeignException.NotFound) {
