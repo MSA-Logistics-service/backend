@@ -9,6 +9,7 @@ import msa.logistics.service.logistics.delivery.service.DeliveryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class DeliveryController {
 
     // 배송 상세조회
     @GetMapping("/{deliveryId}")
+    @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<ApiResponseDto<DeliveryResponseDto>> getDelivery(@PathVariable("deliveryId") UUID deliveryId) {
         Delivery delivery = deliveryService.getDeliveryById(deliveryId);
         return createResponse(HttpStatus.OK, "배송 상세 정보 조회", DeliveryResponseDto.fromEntity(delivery));
@@ -29,6 +31,7 @@ public class DeliveryController {
 
     // 배송 수정
     @PutMapping("/{deliveryId}")
+
     public ResponseEntity<ApiResponseDto<DeliveryResponseDto>> editDelivery(
             @PathVariable("deliveryId") UUID deliveryId,
             @RequestBody DeliveryEditRequestDto deliveryEditRequestDto) {

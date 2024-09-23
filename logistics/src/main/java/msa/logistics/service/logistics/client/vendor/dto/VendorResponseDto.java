@@ -18,4 +18,5 @@ public class VendorResponseDto {
     private String vendorAddress;
     private UUID hubId;
     private Long userId;
+    private String username;
 }

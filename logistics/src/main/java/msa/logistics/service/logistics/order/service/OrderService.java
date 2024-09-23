@@ -60,7 +60,7 @@ public class OrderService {
         UUID deliveryId;
         // 생성된 Order 객체를 DeliveryService에 전달하여 배송 생성
         try {
-            deliveryId = deliveryService.createDelivery(requestDto, order.getOrderId()); // 주문 객체를 전달
+            deliveryId = deliveryService.createDelivery(username,roles,requestDto, order.getOrderId()); // 주문 객체를 전달
             Delivery delivery = deliveryService.getDeliveryById(deliveryId);
 
             // 배송 객체를 주문에 설정

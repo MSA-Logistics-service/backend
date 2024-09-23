@@ -94,6 +94,7 @@ public class HubPathController {
     public ResponseEntity<List<HubPathResponseDto>> getHubPathsByStartAndEnd(
             @RequestParam(value = "startHub", required = false) String startHub,
             @RequestParam(value = "endHub", required = false) String endHub) {
+       // UUID -> String
         UUID startHubUUID = convertStringToUUID(startHub);
         UUID endHubUUID = convertStringToUUID(endHub);
 
