@@ -7,7 +7,7 @@ import msa.logistics.service.logistics.delivery.domain.DeliveryRoute;
 import msa.logistics.service.logistics.delivery.dto.request.DeliveryRouteEditRequestDto;
 import msa.logistics.service.logistics.delivery.dto.HubPathData;
 import msa.logistics.service.logistics.delivery.dto.response.DeliveryRouteResponseDto;
-import msa.logistics.service.logistics.delivery.naver.NaverApiService;
+//import msa.logistics.service.logistics.delivery.naver.NaverApiService;
 import msa.logistics.service.logistics.delivery.naver.NaverDto;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRepository;
 import msa.logistics.service.logistics.delivery.repository.DeliveryRouteRepository;
@@ -27,7 +27,7 @@ public class DeliveryRouteService {
 
     private final DeliveryRepository deliveryRepository;
     private final DeliveryRouteRepository deliveryRouteRepository;
-    private final NaverApiService naverApiService;
+//    private final NaverApiService naverApiService;
 
 
     // 하드코딩된 데이터를 사용한 createDeliveryRoute 메서드
@@ -35,20 +35,20 @@ public class DeliveryRouteService {
     public void createDeliveryRoute(Delivery delivery, UUID deliveryId) {
 
 
-        // 예시 사용
-        String start = "127.1059968,37.3597093";// 출발 허브의 위도, 경도
-        String end = "129.0764276,35.1795108"; // 도착 허브의 위도, 경도
-        //startHub 위도,경도  destination 위도,경도 받아서 naver 서비스 전달
-
-        NaverDto response = naverApiService.getDirection(start,end);
-
-        // Naver API 응답 검증
-        if (response == null || response.getDistance() == 0 || response.getDuration() == 0) {
-            throw new IllegalStateException("Naver API로부터 유효한 경로 정보를 받아오지 못했습니다.");
-        }
-
-        System.out.println("소요 시간: " + response.getDuration() + "초");
-        System.out.println("거리: " + response.getDistance() + "미터");
+//        // 예시 사용
+//        String start = "127.1059968,37.3597093";// 출발 허브의 위도, 경도
+//        String end = "129.0764276,35.1795108"; // 도착 허브의 위도, 경도
+//        //startHub 위도,경도  destination 위도,경도 받아서 naver 서비스 전달
+//
+//        NaverDto response = naverApiService.getDirection(start,end);
+//
+//        // Naver API 응답 검증
+//        if (response == null || response.getDistance() == 0 || response.getDuration() == 0) {
+//            throw new IllegalStateException("Naver API로부터 유효한 경로 정보를 받아오지 못했습니다.");
+//        }
+//
+//        System.out.println("소요 시간: " + response.getDuration() + "초");
+//        System.out.println("거리: " + response.getDistance() + "미터");
 
 
 

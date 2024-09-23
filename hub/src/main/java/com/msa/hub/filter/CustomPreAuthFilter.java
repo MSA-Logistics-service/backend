@@ -34,6 +34,7 @@ public class CustomPreAuthFilter extends OncePerRequestFilter {
         // 헤더에서 사용자 정보와 역할(Role)을 추출
         String username = request.getHeader("X-User-Name");
         String rolesHeader = request.getHeader("X-User-Roles");
+        log.info(username + " " + rolesHeader);
 
         if (username != null && rolesHeader != null) {
             // rolesHeader에 저장된 역할을 SimpleGrantedAuthority로 변환
